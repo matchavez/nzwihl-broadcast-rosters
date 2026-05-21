@@ -1,0 +1,52 @@
+name: Build rosters
+
+on:
+  schedule:
+    - cron: "0 19 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . pytest
+
+      - name: Run unit tests
+        run: PYTHONPATH=src python -m pytest tests/ -v
+
+      - name: Generate rosters (next 4 days)
+        id: build
+        run: |
+          python -m nzwihl_rosters --within-days 4 --output ./output | tee build.log
+          shopt -s nullglob
+          pdfs=(output/*.pdf)
+          if [ ${#pdfs[@]} -eq 0 ]; then
+            echo "no_pdfs=true" >> "$GITHUB_OUTPUT"
+            echo "No PDFs produced — exiting without a release."
+          else
+            echo "no_pdfs=false" >> "$GITHUB_OUTPUT"
+            ls -la output/
+          fi
+
+      - name: Publish release
+        if: steps.build.outputs.no_pdfs == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: rosters-${{ github.run_number }}
+          name: "Upcoming rosters · run ${{ github.run_number }}"
+          body_path: build.log
+          files: |
+            output/*.pdf
