@@ -9,7 +9,7 @@ Calling convention:
         game_info=GameInfo(...),
     )
 
-The two columns are: HOME left, AWAY right.
+The two columns are: AWAY left, HOME right (matches the schedule order).
 """
 from __future__ import annotations
 
@@ -279,8 +279,8 @@ def build_roster_pdf(
     away_skaters_full, away_played_g = _merge_bench_goalies_into_skaters(away_skaters, away_goalies)
     home_skaters_full, home_played_g = _merge_bench_goalies_into_skaters(home_skaters, home_goalies)
 
-    draw_team(left_x,  home_team, home_skaters_full, home_played_g)
-    draw_team(right_x, away_team, away_skaters_full, away_played_g)
+    draw_team(left_x,  away_team, away_skaters_full, away_played_g)
+    draw_team(right_x, home_team, home_skaters_full, home_played_g)
 
     # Footer
     c.setFillColor(MUTED); c.setFont("Helvetica", 8.5)
