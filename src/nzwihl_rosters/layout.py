@@ -100,16 +100,48 @@ def build_roster_pdf(
     left_x  = MARGIN
     right_x = MARGIN + col_w + COL_GUTTER
 
-    # Compute one header font size that fits both team names
+    # Compute one header font size that fits both team names. The logo + name are
+    # drawn as a single centred group, so reserve horizontal room for the badge.
+    LOGO_ALLOW = 9*mm   # badge width + gap budget when sizing the name
     def _fit_header_fs() -> float:
         fs = 19.0
-        max_w = col_w - 8*mm
+        max_w = col_w - 8*mm - LOGO_ALLOW
         for t in (away_team.display_name, home_team.display_name):
             up = t.upper()
             while c.stringWidth(up, "Helvetica-Bold", fs) > max_w and fs > 11:
                 fs -= 0.5
         return fs
     HEADER_FS = _fit_header_fs()
+
+    def _draw_header_badge_and_name(x: float, team: Team, title_color, band_top: float, band_h: float):
+        """Draw the team name centred, with its logo immediately to the left, the
+        pair centred together in the band. NZWIHL logos already carry a white
+        circular backdrop, so no chip is drawn behind them."""
+        text = team.display_name.upper()
+        text_w = c.stringWidth(text, "Helvetica-Bold", HEADER_FS)
+        band_mid = band_top - band_h/2
+        baseline = band_top - band_h + 4.7*mm
+
+        logo_path = team.logo_path
+        if logo_path is None:
+            # graceful fallback: name only, centred
+            c.setFillColor(title_color); c.setFont("Helvetica-Bold", HEADER_FS)
+            c.drawCentredString(x + col_w/2, baseline, text)
+            return
+
+        logo_box = HEADER_FS * 1.55     # drawn logo size (pt) ~ a touch over cap height
+        gap      = 2.2*mm
+        group_w  = logo_box + gap + text_w
+        start_x  = x + col_w/2 - group_w/2
+
+        # logo drawn directly on the band (its own white circle gives contrast),
+        # centred vertically, aspect preserved, alpha respected
+        c.drawImage(str(logo_path), start_x, band_mid - logo_box/2,
+                    logo_box, logo_box, mask='auto', preserveAspectRatio=True)
+
+        # team name
+        c.setFillColor(title_color); c.setFont("Helvetica-Bold", HEADER_FS)
+        c.drawString(start_x + logo_box + gap, baseline, text)
 
     def draw_team(x: float, team: Team, skaters: list[SkaterRow], played_goalies: list[GoalieRow]):
         y_top = content_top
@@ -120,8 +152,7 @@ def build_roster_pdf(
         # team header band
         band_h = 14*mm
         c.setFillColor(primary); c.rect(x, y_top - band_h, col_w, band_h, fill=1, stroke=0)
-        c.setFillColor(title_color); c.setFont("Helvetica-Bold", HEADER_FS)
-        c.drawCentredString(x + col_w/2, y_top - band_h + 4.7*mm, team.display_name.upper())
+        _draw_header_badge_and_name(x, team, title_color, y_top, band_h)
         cur_y = y_top - band_h - 5*mm
 
         highlight = _top3_keys(skaters)
