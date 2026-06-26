@@ -50,3 +50,18 @@ jobs:
           body_path: build.log
           files: |
             output/*.pdf
+            output/boxscores.json
+
+      - name: Commit box-score manifest
+        if: steps.build.outputs.no_pdfs == 'false'
+        run: |
+          [ -f output/boxscores.json ] || { echo "no boxscores.json"; exit 0; }
+          cp output/boxscores.json boxscores.json
+          new=$(jq -S . boxscores.json 2>/dev/null || cat boxscores.json)
+          old=$(git show HEAD:boxscores.json 2>/dev/null | jq -S . 2>/dev/null || echo "")
+          if [ "$new" = "$old" ]; then echo "boxscores.json unchanged"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add boxscores.json
+          git commit -m "Update box-score manifest [skip ci]"
+          git push

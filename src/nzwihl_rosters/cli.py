@@ -11,7 +11,8 @@ from datetime import datetime
 from pathlib import Path
 
 from .layout import build_roster_pdf, GameInfo
-from .schedule import upcoming_within, group_into_series, Game
+from .schedule import upcoming_within, group_into_series, Game, fetch_schedule_html
+from . import boxscores
 from .scraper import scrape_team
 
 
@@ -63,7 +64,8 @@ def main(argv: list[str] | None = None) -> int:
 
     args.output.mkdir(parents=True, exist_ok=True)
 
-    games = upcoming_within(args.within_days)
+    schedule_html = fetch_schedule_html()
+    games = upcoming_within(args.within_days, html=schedule_html)
     if not games:
         print(f"No upcoming games within {args.within_days} days.")
         return 0
@@ -84,6 +86,13 @@ def main(argv: list[str] | None = None) -> int:
             print(f"    → wrote {out.name}")
         except Exception as exc:
             print(f"    ! failed: {exc}", file=sys.stderr)
+
+    try:
+        manifest = boxscores.write_manifest(args.output / "boxscores.json", games, schedule_html)
+        n_ok = sum(1 for g in manifest["games"] if g["gameid"])
+        print(f"    → wrote boxscores.json ({n_ok}/{len(manifest['games'])} gameids resolved)")
+    except Exception as exc:  # noqa: BLE001 — best-effort, never abort the run
+        print(f"    ! boxscores manifest failed: {exc}", file=sys.stderr)
     return 0
 
 
