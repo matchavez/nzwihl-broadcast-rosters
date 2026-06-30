@@ -29,7 +29,7 @@ from .http import fetch
 from .teams import Team, by_team_id
 
 
-SCHEDULE_URL = "https://www.nzwihl.com/leagues/schedules.cfm"
+SCHEDULE_URL = "https://admin.esportsdesk.com/leagues/schedules.cfm"
 NZ_TZ = ZoneInfo("Pacific/Auckland")
 
 

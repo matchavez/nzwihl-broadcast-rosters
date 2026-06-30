@@ -10,7 +10,7 @@ from .http import fetch
 from .overrides import normalize_name
 
 
-STATS_URL = "https://www.nzwihl.com/leagues/stats_1team.cfm"
+STATS_URL = "https://admin.esportsdesk.com/leagues/stats_1team.cfm"
 
 _PLAYER_LINK = re.compile(
     r'<a[^>]*href="[^"]*playerID=(\d+)[^"]*"[^>]*title="([^"]+)"[^>]*>'
