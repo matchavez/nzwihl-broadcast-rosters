@@ -71,6 +71,28 @@ _MONTHS = {m.lower(): i + 1 for i, m in enumerate(
     ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 )}
 
+# Venue text is scraped straight from the admin schedule table, and whoever
+# enters it isn't consistent ("Avondale, Auckland" vs "Avondale" vs
+# "Paradice Avondale", etc). Normalise known venues to a single canonical
+# label per Mat's list (2026-07-01) so broadcast graphics never show two
+# different spellings of the same rink.
+_VENUE_ALIASES: list[tuple[str, str]] = [
+    ("avondale", "Paradice Avondale"),
+    ("botany", "Paradice Botany"),
+    ("alpine ice", "Alpine Ice Centre"),
+    ("christchurch", "Alpine Ice Centre"),
+    ("dunedin", "Dunedin Ice Stadium"),
+    ("queenstown", "Queenstown Ice Arena"),
+]
+
+
+def _normalize_venue(raw: str) -> str:
+    low = raw.lower()
+    for needle, canonical in _VENUE_ALIASES:
+        if needle in low:
+            return canonical
+    return raw.strip()
+
 
 def _clean(td_html: str) -> str:
     return unescape(_TAG_RE.sub("", td_html)).strip()
@@ -124,7 +146,8 @@ def parse_schedule(html: str) -> list[Game]:
 
         is_final = bool(_BOXSCORE_RE.search(row_html))
 
-        venue = cells[6] if len(cells) > 6 else home.home_venue
+        raw_venue = cells[6] if len(cells) > 6 and cells[6].strip() else home.home_venue
+        venue = _normalize_venue(raw_venue)
 
         if is_final:
             start_local = datetime(year, month, day, 12, 0, tzinfo=NZ_TZ)

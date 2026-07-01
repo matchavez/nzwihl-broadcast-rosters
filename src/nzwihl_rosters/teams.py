@@ -35,7 +35,7 @@ TEAMS: dict[str, Team] = {
         primary_hex="#1A2A44",
         accent_hex="#8A9BB0",
         title_hex="#FFFFFF",
-        home_venue="Auckland",
+        home_venue="Paradice Avondale",
         short_code="AST",
     ),
     "CANTERBURY INFERNO": Team(
@@ -45,7 +45,7 @@ TEAMS: dict[str, Team] = {
         primary_hex="#B00020",
         accent_hex="#FF6A13",
         title_hex="#FFFFFF",
-        home_venue="Alpine Ice Sports Centre, Christchurch",
+        home_venue="Alpine Ice Centre",
         short_code="CIN",
     ),
     "DUNEDIN THUNDER WOMEN": Team(

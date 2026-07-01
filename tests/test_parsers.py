@@ -52,9 +52,9 @@ def test_schedule_venue_per_row():
     upcoming = [g for g in games if not g.is_final]
 
     # Same home team, different venues
-    assert upcoming[0].venue == "Avondale, Auckland"
-    assert upcoming[1].venue == "Botany, Auckland"
-    assert upcoming[2].venue == "Queenstown"
+    assert upcoming[0].venue == "Paradice Avondale"
+    assert upcoming[1].venue == "Paradice Botany"
+    assert upcoming[2].venue == "Queenstown Ice Arena"
 
 
 def test_final_game_parsed():
