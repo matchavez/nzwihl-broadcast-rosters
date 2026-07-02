@@ -1,17 +1,4 @@
 {
   "league": "NZWIHL",
-  "games": [
-    {
-      "date": "2026-06-27",
-      "time": "7:00 PM",
-      "datetime": "2026-06-27T19:00:00+12:00",
-      "away": "Dunedin Thunder Women",
-      "away_code": "DTW",
-      "home": "Wakatipu Wild",
-      "home_code": "WLD",
-      "venue": "Queenstown",
-      "gameid": 2520018,
-      "boxscore_url": "https://www.nzwihl.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520018"
-    }
-  ]
+  "games": []
 }
