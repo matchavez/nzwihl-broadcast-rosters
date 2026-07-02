@@ -173,6 +173,45 @@ def upcoming_within(days: int, html: str | None = None) -> list[Game]:
     return [g for g in games if (not g.is_final) and now <= g.start_local <= cutoff]
 
 
+def _game_key(g: Game) -> tuple[int, int, datetime]:
+    return (g.away.team_id, g.home.team_id, g.start_local)
+
+
+def expand_to_series(window_games: list[Game], all_games: list[Game]) -> list[Game]:
+    """Pull in every other upcoming game that belongs to the same series as a
+    game already found inside the lookahead window — even if that other game
+    falls outside the window.
+
+    NZWIHL teams often play the same opponent twice in a weekend (e.g. Sat +
+    Sun). If the window cutoff lands between the two games (a Wednesday sweep
+    with a 4-day window catches Saturday but not Sunday), the second game
+    would otherwise be missed until a later run. "Same series" reuses
+    `group_into_series`'s rule: consecutive games between the same two teams
+    no more than 3 days apart.
+    """
+    if not window_games:
+        return []
+
+    upcoming_all = [g for g in all_games if not g.is_final]
+    all_series = group_into_series(upcoming_all)
+
+    window_keys = {_game_key(g) for g in window_games}
+
+    seen: set[tuple[int, int, datetime]] = set()
+    out: list[Game] = []
+    for series in all_series:
+        if not any(_game_key(g) in window_keys for g in series):
+            continue
+        for g in series:
+            key = _game_key(g)
+            if key not in seen:
+                seen.add(key)
+                out.append(g)
+
+    out.sort(key=lambda g: g.start_local)
+    return out
+
+
 def group_into_series(games: list[Game]) -> list[list[Game]]:
     """Group games between the same two teams into a series."""
     by_key: dict[tuple[int, int], list[list[Game]]] = {}
