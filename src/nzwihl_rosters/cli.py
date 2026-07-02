@@ -66,16 +66,21 @@ def main(argv: list[str] | None = None) -> int:
 
     schedule_html = fetch_schedule_html()
     games = upcoming_within(args.within_days, html=schedule_html)
-    if not games:
-        print(f"No upcoming games within {args.within_days} days.")
-        return 0
 
-    series = group_into_series(games)
-    print(f"Found {len(games)} upcoming game(s) in {len(series)} series:")
-    for s in series:
-        first = s[0]
-        print(f"  • {first.away.short_code} at {first.home.short_code} — "
-              f"{_date_label(s)} — {first.venue}")
+    # NOTE: we deliberately do NOT early-return when `games` is empty. A run
+    # with nothing upcoming still needs to write boxscores.json so it can prune
+    # entries that have aged out — otherwise a stale card (e.g. last week's
+    # game, with nothing yet scheduled to replace it) sits on the portal
+    # forever, since no later run would ever touch the file again.
+    series = group_into_series(games) if games else []
+    if games:
+        print(f"Found {len(games)} upcoming game(s) in {len(series)} series:")
+        for s in series:
+            first = s[0]
+            print(f"  • {first.away.short_code} at {first.home.short_code} — "
+                  f"{_date_label(s)} — {first.venue}")
+    else:
+        print(f"No upcoming games within {args.within_days} days.")
 
     if args.dry_run:
         return 0
@@ -88,9 +93,13 @@ def main(argv: list[str] | None = None) -> int:
             print(f"    ! failed: {exc}", file=sys.stderr)
 
     try:
-        manifest = boxscores.write_manifest(args.output / "boxscores.json", games, schedule_html)
+        manifest = boxscores.write_manifest(
+            args.output / "boxscores.json", games, schedule_html,
+            existing_path=Path("boxscores.json"),  # the repo-root committed manifest
+        )
         n_ok = sum(1 for g in manifest["games"] if g["gameid"])
-        print(f"    → wrote boxscores.json ({n_ok}/{len(manifest['games'])} gameids resolved)")
+        print(f"    → wrote boxscores.json ({n_ok}/{len(manifest['games'])} entries, "
+              f"{n_ok} gameids resolved, stale entries >{boxscores.DEFAULT_KEEP_DAYS}d pruned)")
     except Exception as exc:  # noqa: BLE001 — best-effort, never abort the run
         print(f"    ! boxscores manifest failed: {exc}", file=sys.stderr)
     return 0

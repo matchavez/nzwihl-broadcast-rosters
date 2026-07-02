@@ -18,7 +18,7 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
-from datetime import date as _date
+from datetime import date as _date, timedelta
 from urllib.parse import urlencode
 
 from .http import fetch
@@ -125,14 +125,68 @@ def resolve(games: list[Game], schedule_html: str, *,
     return out
 
 
-def build_manifest(games: list[Game], schedule_html: str) -> dict:
+# How long a played (or otherwise no-longer-upcoming) game's card stays on the
+# portal after its date before it's pruned from the manifest. A fresh run that
+# finds zero upcoming games would otherwise never touch the file again and a
+# stale card (e.g. last week's NZWIHL game) would sit there indefinitely — see
+# the roster-schedule-pipeline project notes.
+DEFAULT_KEEP_DAYS = 3
+
+
+def _parse_iso_date(s: str) -> _date:
+    y, m, d = (int(x) for x in s.split("-"))
+    return _date(y, m, d)
+
+
+def prune_and_merge(existing_games: list[dict], new_games: list[dict], *,
+                     keep_days: int = DEFAULT_KEEP_DAYS,
+                     today: _date | None = None) -> list[dict]:
+    """Merge freshly-resolved upcoming games onto the previous manifest.
+
+    Old entries are kept for `keep_days` past their date (so a just-played
+    game's box-score card doesn't vanish the instant it's over) and dropped
+    after that unless a new run has already replaced them. This makes the
+    manifest self-cleaning even on runs that find zero upcoming games, instead
+    of relying on every run finding a replacement to overwrite stale data.
+    """
+    today = today or _date.today()
+    cutoff = today - timedelta(days=keep_days)
+    new_keys = {(g["date"], g["away"], g["home"]) for g in new_games}
+    kept_old = [
+        g for g in existing_games
+        if _parse_iso_date(g["date"]) >= cutoff
+        and (g["date"], g["away"], g["home"]) not in new_keys
+    ]
+    merged = kept_old + new_games
+    merged.sort(key=lambda g: g["datetime"])
+    return merged
+
+
+def build_manifest(games: list[Game], schedule_html: str, *,
+                    existing_games: list[dict] | None = None,
+                    keep_days: int = DEFAULT_KEEP_DAYS) -> dict:
     games = sorted(games, key=lambda g: g.start_local)
-    return {"league": LEAGUE, "games": resolve(games, schedule_html)}
+    new_resolved = resolve(games, schedule_html)
+    merged = prune_and_merge(existing_games or [], new_resolved, keep_days=keep_days)
+    return {"league": LEAGUE, "games": merged}
 
 
-def write_manifest(path, games: list[Game], schedule_html: str | None = None) -> dict:
+def write_manifest(out_path, games: list[Game], schedule_html: str | None = None, *,
+                    existing_path=None, keep_days: int = DEFAULT_KEEP_DAYS) -> dict:
+    """Write the manifest to `out_path`, merging against the manifest already
+    committed at `existing_path` (defaults to `out_path` itself if not given —
+    pass the repo-root boxscores.json explicitly when `out_path` is a fresh
+    build-output directory that won't yet contain the previous run's file).
+    """
     if schedule_html is None:
         schedule_html = fetch_schedule_html()
-    manifest = build_manifest(games, schedule_html)
-    Path(path).write_text(json.dumps(manifest, indent=2) + "\n")
+    existing_path = Path(existing_path) if existing_path is not None else Path(out_path)
+    existing_games: list[dict] = []
+    if existing_path.exists():
+        try:
+            existing_games = json.loads(existing_path.read_text()).get("games", [])
+        except Exception:  # noqa: BLE001 — corrupt/missing file: start fresh, don't abort
+            existing_games = []
+    manifest = build_manifest(games, schedule_html, existing_games=existing_games, keep_days=keep_days)
+    Path(out_path).write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest

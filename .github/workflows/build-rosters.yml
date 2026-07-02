@@ -53,7 +53,9 @@ jobs:
             output/boxscores.json
 
       - name: Commit box-score manifest
-        if: steps.build.outputs.no_pdfs == 'false'
+        # Runs regardless of no_pdfs — the manifest now self-prunes stale
+        # entries even on days with nothing new to publish, so it must be
+        # committed every run, not just when a release goes out.
         run: |
           [ -f output/boxscores.json ] || { echo "no boxscores.json"; exit 0; }
           cp output/boxscores.json boxscores.json
