@@ -31,7 +31,7 @@ jobs:
       - name: Run unit tests
         run: PYTHONPATH=src python -m pytest tests/ -v
 
-      - name: Generate rosters (PDFs: next 4 days · manifest lookahead: 11 days)
+      - name: "Generate rosters (PDFs: next 4 days, manifest lookahead: 11 days)"
         id: build
         run: |
           python -m nzwihl_rosters --within-days 4 --manifest-within-days 11 --output ./output | tee build.log
