@@ -1,6 +1,10 @@
 name: Build rosters
 
 on:
+  # Daily at 19:00 UTC = 07:00 NZST (or 08:00 NZDT). Generates roster PDFs for
+  # any game starting in the next 4 days. boxscores.json also lists games up to
+  # 11 days out (no PDF yet) so the hockeyrosters page can show them as 'coming
+  # soon' further ahead than the portal (see --manifest-within-days below).
   schedule:
     - cron: "0 19 * * *"
   workflow_dispatch: {}
@@ -27,10 +31,10 @@ jobs:
       - name: Run unit tests
         run: PYTHONPATH=src python -m pytest tests/ -v
 
-      - name: Generate rosters (next 4 days)
+      - name: Generate rosters (PDFs: next 4 days · manifest lookahead: 11 days)
         id: build
         run: |
-          python -m nzwihl_rosters --within-days 4 --output ./output | tee build.log
+          python -m nzwihl_rosters --within-days 4 --manifest-within-days 11 --output ./output | tee build.log
           shopt -s nullglob
           pdfs=(output/*.pdf)
           if [ ${#pdfs[@]} -eq 0 ]; then

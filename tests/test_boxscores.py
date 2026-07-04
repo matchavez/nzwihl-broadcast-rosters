@@ -75,3 +75,42 @@ def test_prune_and_merge_new_games_replace_old_duplicate_and_sort():
     assert len(merged) == 2
     assert merged[0]["gameid"] == 2519941  # replaced, not duplicated
     assert merged[1]["date"] == "2026-07-05"
+
+
+def test_resolve_marks_in_core_window_true_without_core_keys():
+    """Back-compat: callers that don't pass core_keys (e.g. existing tests,
+    single-window callers) get every game marked in_core_window=True."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from nzwihl_rosters.schedule import Game
+    from nzwihl_rosters.teams import TEAMS
+
+    steel = TEAMS["AUCKLAND STEEL"]
+    inferno = TEAMS["CANTERBURY INFERNO"]
+    g = Game(datetime(2026, 7, 10, 16, 45, tzinfo=ZoneInfo("Pacific/Auckland")),
+              away=steel, home=inferno, venue="Test Arena", is_final=False)
+    out = boxscores.resolve([g], SCHEDULE)
+    assert out[0]["in_core_window"] is True
+
+
+def test_resolve_marks_in_core_window_false_when_outside_core_keys():
+    """Games outside the narrower PDF window (not in core_keys) are still
+    included in the manifest but flagged in_core_window=False, so pages that
+    want the old narrow behaviour (the portal) can filter them back out while
+    hockeyrosters shows them as 'coming soon'."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from nzwihl_rosters.schedule import Game
+    from nzwihl_rosters.teams import TEAMS
+
+    steel = TEAMS["AUCKLAND STEEL"]
+    inferno = TEAMS["CANTERBURY INFERNO"]
+    near = Game(datetime(2026, 7, 6, 16, 45, tzinfo=ZoneInfo("Pacific/Auckland")),
+                away=steel, home=inferno, venue="Test Arena", is_final=False)
+    far = Game(datetime(2026, 7, 14, 16, 45, tzinfo=ZoneInfo("Pacific/Auckland")),
+               away=inferno, home=steel, venue="Test Arena", is_final=False)
+    core_keys = {(near.away.team_id, near.home.team_id, near.start_local)}
+    out = boxscores.resolve([near, far], SCHEDULE, core_keys=core_keys)
+    by_date = {o["date"]: o["in_core_window"] for o in out}
+    assert by_date["2026-07-06"] is True
+    assert by_date["2026-07-14"] is False

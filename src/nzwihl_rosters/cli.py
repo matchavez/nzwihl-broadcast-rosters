@@ -56,6 +56,11 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Build NZWIHL roster PDFs for upcoming games.")
     p.add_argument("--within-days", type=int, default=4,
                    help="Generate PDFs only for games starting within this many days (default 4).")
+    p.add_argument("--manifest-within-days", type=int, default=11,
+                   help="Include games in boxscores.json up to this many days out (default 11), "
+                        "even before a PDF is generated for them. Lets the hockeyrosters page show "
+                        "'coming soon' cards further ahead than the portal, without changing which "
+                        "games get PDFs (--within-days) or how far ahead the portal displays.")
     p.add_argument("--output", type=Path, default=Path("output"),
                    help="Directory for generated PDFs.")
     p.add_argument("--dry-run", action="store_true",
@@ -73,6 +78,13 @@ def main(argv: list[str] | None = None) -> int:
     all_games = parse_schedule(schedule_html)
     games = expand_to_series(window_games, all_games)
 
+    # Wider lookahead used only for boxscores.json (not PDF generation) — lets
+    # the hockeyrosters page list games further out as "coming soon" while the
+    # portal and PDF pipeline keep behaving exactly as before (see core_keys).
+    manifest_window_games = upcoming_within(args.manifest_within_days, html=schedule_html)
+    manifest_games = expand_to_series(manifest_window_games, all_games)
+    core_keys = {(g.away.team_id, g.home.team_id, g.start_local) for g in games}
+
     # NOTE: we deliberately do NOT early-return when `games` is empty. A run
     # with nothing upcoming still needs to write boxscores.json so it can prune
     # entries that have aged out — otherwise a stale card (e.g. last week's
@@ -87,6 +99,8 @@ def main(argv: list[str] | None = None) -> int:
                   f"{_date_label(s)} — {first.venue}")
     else:
         print(f"No upcoming games within {args.within_days} days.")
+    print(f"    (manifest lookahead: {len(manifest_games)} game(s) within "
+          f"{args.manifest_within_days} days)")
 
     if args.dry_run:
         return 0
@@ -100,8 +114,9 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         manifest = boxscores.write_manifest(
-            args.output / "boxscores.json", games, schedule_html,
+            args.output / "boxscores.json", manifest_games, schedule_html,
             existing_path=Path("boxscores.json"),  # the repo-root committed manifest
+            core_keys=core_keys,
         )
         n_ok = sum(1 for g in manifest["games"] if g["gameid"])
         print(f"    → wrote boxscores.json ({n_ok}/{len(manifest['games'])} entries, "

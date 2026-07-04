@@ -93,14 +93,24 @@ def _probe_shells(start_gameid: int, probe_ahead: int,
 
 def resolve(games: list[Game], schedule_html: str, *,
             client_id: int = CLIENT_ID, league_id: int = LEAGUE_ID,
-            probe_ahead: int = 12) -> list[dict]:
-    """Map each upcoming Game to its gameid (or None if it can't be resolved)."""
+            probe_ahead: int = 12, core_keys: set[tuple] | None = None) -> list[dict]:
+    """Map each upcoming Game to its gameid (or None if it can't be resolved).
+
+    If `core_keys` is given, each returned dict gets an `in_core_window` flag —
+    True if the game is inside the narrower PDF-generation window, False if it
+    only qualified for the wider manifest-only lookahead (used by the
+    hockeyrosters page to show 'coming soon' cards further out than the
+    portal). If `core_keys` is None, every game is marked in_core_window=True
+    (back-compat: single-window callers/tests).
+    """
     last = last_final_gameid(schedule_html)
     shells = _probe_shells(last, probe_ahead, client_id, league_id) if last else {}
     used: set[int] = set()
     out: list[dict] = []
     for g in games:
         gdate = g.start_local.date()
+        key = (g.away.team_id, g.home.team_id, g.start_local)
+        in_core = True if core_keys is None else key in core_keys
         match_id = None
         for gid, p in shells.items():
             if gid in used:
@@ -121,6 +131,7 @@ def resolve(games: list[Game], schedule_html: str, *,
             "venue": g.venue,
             "gameid": match_id,
             "boxscore_url": public_boxscore_url(match_id, client_id, league_id) if match_id else None,
+            "in_core_window": in_core,
         })
     return out
 
@@ -164,15 +175,17 @@ def prune_and_merge(existing_games: list[dict], new_games: list[dict], *,
 
 def build_manifest(games: list[Game], schedule_html: str, *,
                     existing_games: list[dict] | None = None,
-                    keep_days: int = DEFAULT_KEEP_DAYS) -> dict:
+                    keep_days: int = DEFAULT_KEEP_DAYS,
+                    core_keys: set[tuple] | None = None) -> dict:
     games = sorted(games, key=lambda g: g.start_local)
-    new_resolved = resolve(games, schedule_html)
+    new_resolved = resolve(games, schedule_html, core_keys=core_keys)
     merged = prune_and_merge(existing_games or [], new_resolved, keep_days=keep_days)
     return {"league": LEAGUE, "games": merged}
 
 
 def write_manifest(out_path, games: list[Game], schedule_html: str | None = None, *,
-                    existing_path=None, keep_days: int = DEFAULT_KEEP_DAYS) -> dict:
+                    existing_path=None, keep_days: int = DEFAULT_KEEP_DAYS,
+                    core_keys: set[tuple] | None = None) -> dict:
     """Write the manifest to `out_path`, merging against the manifest already
     committed at `existing_path` (defaults to `out_path` itself if not given —
     pass the repo-root boxscores.json explicitly when `out_path` is a fresh
@@ -187,6 +200,7 @@ def write_manifest(out_path, games: list[Game], schedule_html: str | None = None
             existing_games = json.loads(existing_path.read_text()).get("games", [])
         except Exception:  # noqa: BLE001 — corrupt/missing file: start fresh, don't abort
             existing_games = []
-    manifest = build_manifest(games, schedule_html, existing_games=existing_games, keep_days=keep_days)
+    manifest = build_manifest(games, schedule_html, existing_games=existing_games,
+                               keep_days=keep_days, core_keys=core_keys)
     Path(out_path).write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
