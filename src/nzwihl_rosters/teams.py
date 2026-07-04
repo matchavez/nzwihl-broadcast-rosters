@@ -12,12 +12,20 @@ class Team:
     team_id: int
     display_name: str
     schedule_name: str
-    primary_hex: str
-    accent_hex: str
-    title_hex: str
-    home_venue: str
-    short_code: str
+    primary_hex: str             # team header band colour
+    accent_hex: str              # secondary colour (used for IM flag etc.)
+    title_hex: str               # team-name text colour drawn on the band
+    home_venue: str              # short venue label for the footer
+    short_code: str              # 3-letter code (AST/CIN/DTW/WLD)
     logo_file: str = ""          # filename in assets/logos/ (defaults to short_code.png)
+    text_hex: str = ""           # team colour used for TEXT on a white background
+                                  # (jersey #, captain letter). Falls back to
+                                  # primary_hex when unset. Override this when
+                                  # primary_hex is too light to read on white
+                                  # (e.g. Wild's yellow -> their navy — same
+                                  # issue NZIHL fixed for Stampede, ported
+                                  # here since Wild shares the identical
+                                  # yellow primary. Mat, 2026-07-05).
 
     @property
     def logo_path(self) -> "Path | None":
@@ -64,7 +72,11 @@ TEAMS: dict[str, Team] = {
         schedule_name="WAKATIPU WILD",
         primary_hex="#FAC805",
         accent_hex="#1D3056",
-        title_hex="#1D3056",
+        title_hex="#1D3056",      # navy on yellow — primary is too light for white
+        text_hex="#1D3056",       # jersey #/captain letter on white also use navy,
+                                    # not the yellow primary (same fix as NZIHL's
+                                    # Stampede, ported here since Wild shares the
+                                    # identical yellow primary. Mat, 2026-07-05)
         home_venue="Queenstown Ice Arena",
         short_code="WLD",
     ),

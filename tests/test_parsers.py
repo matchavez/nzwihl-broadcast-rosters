@@ -64,3 +64,111 @@ def test_final_game_parsed():
     assert final.away.short_code == "AST"
     assert final.home.short_code == "WLD"
     assert final.start_local.year == 2026
+
+
+from nzwihl_rosters.scraper import parse_skaters, parse_goalies
+
+
+def test_skaters_parse_correctly():
+    html = (FIXTURES / "team_dtw_min.html").read_text()
+    skaters = parse_skaters(html, team_id=675638)
+    by_num = {s.jersey: s for s in skaters}
+
+    daigle = by_num["19"]
+    assert daigle.first == "Justin"
+    assert daigle.last == "DAIGLE"
+    assert daigle.gp == 4 and daigle.g == 5 and daigle.a == 3
+    assert daigle.flag == "IM"
+    assert daigle.position == "F"
+
+    # Lowercase auto-title-casing: "ashley reid" -> "Ashley" / "REID"
+    reid = by_num["81"]
+    assert reid.first == "Ashley"
+    assert reid.last == "REID"
+
+    # RO flag preserved
+    fox = by_num["4"]
+    assert fox.flag == "RO"
+    assert fox.gp == 0
+
+
+def test_skaters_parse_correctly_with_extra_columns():
+    """Regression test (ported from NZIHL): a stats_1team.cfm revision that
+    inserts a BY (birth year) column — and appends P/G, +/-, PPG, etc. —
+    must not shift GP/G/A off by one. Columns are located by header label,
+    not a fixed offset."""
+    html = (FIXTURES / "team_dtw_v2cols.html").read_text()
+    skaters = parse_skaters(html, team_id=675638)
+    by_num = {s.jersey: s for s in skaters}
+
+    daigle = by_num["19"]
+    assert daigle.gp == 12 and daigle.g == 20 and daigle.a == 11
+    assert daigle.position == "F"
+    assert daigle.plus_minus == "13"
+
+    brooks = by_num["8"]
+    assert brooks.gp == 12 and brooks.g == 1 and brooks.a == 4
+    assert brooks.plus_minus == "-7"
+    assert brooks.flag == "C"
+
+    park = by_num["7"]
+    assert park.plus_minus == "E"
+
+
+def test_skaters_plus_minus_blank_when_column_absent():
+    """The original (no BY, no +/-) layout must still parse cleanly, with
+    plus_minus defaulting to blank rather than erroring or misreading PTS."""
+    html = (FIXTURES / "team_dtw_min.html").read_text()
+    skaters = parse_skaters(html, team_id=675638)
+    assert all(s.plus_minus == "" for s in skaters)
+
+
+def test_goalies_parse_correctly():
+    html = (FIXTURES / "team_dtw_min.html").read_text()
+    goalies = parse_goalies(html, team_id=675638)
+    by_num = {g.jersey: g for g in goalies}
+    assert len(goalies) == 4
+
+    sharp = by_num["52"]
+    assert sharp.first == "Nina"
+    assert sharp.last == "SHARP"
+    assert sharp.gp == 1
+    assert sharp.gaa == "3.93"
+    assert sharp.sv_pct == ".920"
+
+
+def test_goalies_parse_correctly_with_extra_by_column():
+    """Regression test (ported from NZIHL): a stats_1team.cfm revision that
+    inserts a BY (birth year) column between "#" and "GP" in the GOALIE
+    STATISTICS table must not zero out GP."""
+    html = (FIXTURES / "team_dtw_v2cols.html").read_text()
+    goalies = parse_goalies(html, team_id=675638)
+    assert len(goalies) == 1
+    sharp = goalies[0]
+    assert sharp.jersey == "52"
+    assert sharp.gp == 1, f"expected gp=1, got {sharp.gp!r} (BY column likely misread as GP)"
+    assert sharp.mp == 61
+    assert sharp.gaa == "3.93"
+    assert sharp.sv_pct == ".920"
+
+
+def test_goalies_parse_correctly_with_broken_tooltip_header():
+    """Regression test (ported from NZIHL): the live GOALIE STATISTICS table
+    wraps header labels in `<span title="...">` tooltips, and the GAA
+    tooltip's title attribute embeds a literal `<br />`. A naive
+    tag-stripping regex treats that embedded `<`/`>` as a real tag boundary,
+    garbling the cleaned "GAA" label so the header lookup misses it and
+    silently falls back to the wrong column (GA's index)."""
+    html = (FIXTURES / "team_steel_broken_tooltip.html").read_text()
+    goalies = parse_goalies(html, team_id=675636)
+    by_num = {g.jersey: g for g in goalies}
+
+    yates = by_num["35"]
+    assert yates.gp == 5 and yates.mp == 301
+    assert yates.gaa == "3.19", f"expected gaa=3.19, got {yates.gaa!r} (GAA tooltip likely misparsed as GA)"
+    assert yates.sv_pct == ".905"
+
+    ashe = by_num["39"]
+    assert ashe.gp == 5 and ashe.mp == 301
+    assert ashe.gaa == "3.39", f"expected gaa=3.39, got {ashe.gaa!r}"
+    assert ashe.sv_pct == ".909"
