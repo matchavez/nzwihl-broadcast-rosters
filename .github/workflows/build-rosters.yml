@@ -6,7 +6,7 @@ on:
   # 11 days out (no PDF yet) so the hockeyrosters page can show them as 'coming
   # soon' further ahead than the portal (see --manifest-within-days below).
   schedule:
-    - cron: "0 19 * * *"
+    - cron: "30 17 * * *"
   workflow_dispatch: {}
 
 permissions:

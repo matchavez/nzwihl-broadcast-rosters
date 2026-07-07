@@ -169,7 +169,14 @@ def upcoming_within(days: int, html: str | None = None) -> list[Game]:
         html = fetch_schedule_html()
     games = parse_schedule(html)
     now = datetime.now(NZ_TZ)
-    cutoff = now + timedelta(days=days)
+    # End-of-day cutoff: "within N days" means THROUGH the Nth day out. The old
+    # timestamp cutoff (now + N days, evaluated at the ~08:50am NZT run) silently
+    # dropped boundary-day EVENING games — e.g. a Jul 18 17:10 game vanished from a
+    # Jul 7 run's 11-day manifest while a Jul 18 sibling of an in-window Jul 17 game
+    # survived via expand_to_series, making the hockeyrosters page look randomly
+    # wrong (caught 2026-07-08). Same math also made in_core_window trickle a
+    # weekend in one day at a time on the portal.
+    cutoff = (now + timedelta(days=days)).replace(hour=23, minute=59, second=59)
     return [g for g in games if (not g.is_final) and now <= g.start_local <= cutoff]
 
 
