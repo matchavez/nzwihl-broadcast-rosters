@@ -12,7 +12,7 @@
       "venue": "Alpine Ice Centre",
       "gameid": null,
       "boxscore_url": null,
-      "in_core_window": false
+      "in_core_window": true
     },
     {
       "date": "2026-07-12",
@@ -23,6 +23,32 @@
       "home": "Canterbury Inferno",
       "home_code": "CIN",
       "venue": "Alpine Ice Centre",
+      "gameid": null,
+      "boxscore_url": null,
+      "in_core_window": true
+    },
+    {
+      "date": "2026-07-18",
+      "time": "4:30 PM",
+      "datetime": "2026-07-18T16:30:00+12:00",
+      "away": "Canterbury Inferno",
+      "away_code": "CIN",
+      "home": "Auckland Steel",
+      "home_code": "AST",
+      "venue": "Paradice Avondale",
+      "gameid": null,
+      "boxscore_url": null,
+      "in_core_window": false
+    },
+    {
+      "date": "2026-07-19",
+      "time": "4:30 PM",
+      "datetime": "2026-07-19T16:30:00+12:00",
+      "away": "Canterbury Inferno",
+      "away_code": "CIN",
+      "home": "Auckland Steel",
+      "home_code": "AST",
+      "venue": "Paradice Botany",
       "gameid": null,
       "boxscore_url": null,
       "in_core_window": false
