@@ -22,7 +22,7 @@ from datetime import date as _date, timedelta
 from urllib.parse import urlencode
 
 from .http import fetch
-from .schedule import Game, fetch_schedule_html, upcoming_within
+from .schedule import Game, fetch_schedule_html, fetch_schedule_html_for_month, upcoming_within
 
 LEAGUE = "NZWIHL"
 CLIENT_ID = 7132
@@ -59,6 +59,42 @@ def last_final_gameid(schedule_html: str) -> int | None:
     return max(ids) if ids else None
 
 
+def _last_final_gameid_lookback(schedule_html: str, *, client_id: int, league_id: int,
+                                 max_months_back: int = 3, today: _date | None = None,
+                                 fetch_month=None) -> int | None:
+    """last_final_gameid() only ever sees whatever ONE calendar month schedules.cfm's
+    printPage view defaults to (the site scopes that table to its CURRENT SERVER MONTH
+    unless monthID/yearID are passed — confirmed 2026-07-08). If a league's last Final
+    game was in a PRIOR month — e.g. a bye that crosses a month boundary, as happened to
+    NZWIHL going into July 2026 — the current month's page has no boxscore link at all,
+    last_final_gameid() returns None, and _probe_shells() never even starts: every
+    upcoming game in the manifest silently resolves with gameid=None, with no error.
+
+    Fast path (no extra network call): if schedule_html already has a Final, use it as-is.
+    Otherwise walk backward one month at a time (bounded by max_months_back) fetching that
+    month's page until a Final gameid turns up, or give up and return None.
+    """
+    gid = last_final_gameid(schedule_html)
+    if gid:
+        return gid
+    fetch_month = fetch_month or (
+        lambda m, y: fetch_schedule_html_for_month(client_id, league_id, month_id=m, year_id=y))
+    today = today or _date.today()
+    y, m = today.year, today.month
+    for _ in range(max_months_back):
+        m -= 1
+        if m == 0:
+            m, y = 12, y - 1
+        try:
+            html = fetch_month(m, y)
+        except Exception:  # noqa: BLE001 — best-effort; try the next month back
+            continue
+        gid = last_final_gameid(html)
+        if gid:
+            return gid
+    return None
+
+
 def parse_shell(html: str) -> dict | None:
     """Pull {away_id, home_id, date} from a printPage box-score shell.
 
@@ -93,7 +129,8 @@ def _probe_shells(start_gameid: int, probe_ahead: int,
 
 def resolve(games: list[Game], schedule_html: str, *,
             client_id: int = CLIENT_ID, league_id: int = LEAGUE_ID,
-            probe_ahead: int = 12, core_keys: set[tuple] | None = None) -> list[dict]:
+            probe_ahead: int = 12, core_keys: set[tuple] | None = None,
+            today: _date | None = None, fetch_month=None) -> list[dict]:
     """Map each upcoming Game to its gameid (or None if it can't be resolved).
 
     If `core_keys` is given, each returned dict gets an `in_core_window` flag —
@@ -103,7 +140,8 @@ def resolve(games: list[Game], schedule_html: str, *,
     portal). If `core_keys` is None, every game is marked in_core_window=True
     (back-compat: single-window callers/tests).
     """
-    last = last_final_gameid(schedule_html)
+    last = _last_final_gameid_lookback(schedule_html, client_id=client_id, league_id=league_id,
+                                        today=today, fetch_month=fetch_month)
     shells = _probe_shells(last, probe_ahead, client_id, league_id) if last else {}
     used: set[int] = set()
     out: list[dict] = []

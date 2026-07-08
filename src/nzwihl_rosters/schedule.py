@@ -54,6 +54,19 @@ def fetch_schedule_html(client_id: int = 7132, league_id: int = 35501) -> str:
     return fetch(url)
 
 
+def fetch_schedule_html_for_month(client_id: int = 7132, league_id: int = 35501, *,
+                                   month_id: int, year_id: int) -> str:
+    """Same printPage table as fetch_schedule_html(), but for an explicit calendar
+    month/year. schedules.cfm's printPage=1 view defaults to the site's CURRENT
+    SERVER MONTH when monthID/yearID are omitted — it does not include prior or
+    future months. Needed to look back for a Final game when the current month
+    hasn't had one yet (see boxscores._last_final_gameid_lookback)."""
+    params = {"clientid": client_id, "leagueid": league_id, "schedType": "main",
+              "printPage": 1, "monthID": month_id, "yearID": year_id}
+    url = f"{SCHEDULE_URL}?{urlencode(params)}"
+    return fetch(url)
+
+
 _TR_RE = re.compile(r"<tr[^>]*>([\s\S]*?)</tr>", re.IGNORECASE)
 _TD_RE = re.compile(r"<td[^>]*>([\s\S]*?)</td>", re.IGNORECASE)
 _TAG_RE = re.compile(r"<[^>]+>")
