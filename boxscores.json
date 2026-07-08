@@ -10,8 +10,8 @@
       "home": "Canterbury Inferno",
       "home_code": "CIN",
       "venue": "Alpine Ice Centre",
-      "gameid": null,
-      "boxscore_url": null,
+      "gameid": 2520019,
+      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520019",
       "in_core_window": true
     },
     {
@@ -23,8 +23,8 @@
       "home": "Canterbury Inferno",
       "home_code": "CIN",
       "venue": "Alpine Ice Centre",
-      "gameid": null,
-      "boxscore_url": null,
+      "gameid": 2520020,
+      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520020",
       "in_core_window": true
     },
     {
@@ -36,8 +36,8 @@
       "home": "Auckland Steel",
       "home_code": "AST",
       "venue": "Paradice Avondale",
-      "gameid": null,
-      "boxscore_url": null,
+      "gameid": 2520021,
+      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520021",
       "in_core_window": false
     },
     {
@@ -49,8 +49,8 @@
       "home": "Auckland Steel",
       "home_code": "AST",
       "venue": "Paradice Botany",
-      "gameid": null,
-      "boxscore_url": null,
+      "gameid": 2520022,
+      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520022",
       "in_core_window": false
     }
   ]
