@@ -3,7 +3,7 @@
 Self-context for Claude. README.md now exists (added 2026-07-11), modeled on the NZIHL sibling's README with corrected current-state details (cron, NZWIHL support, no-cache origin). This repo is the NZWIHL sibling of matchavez/nzihl-broadcast-rosters; same architecture (`src/nzwihl_rosters/{teams,overrides,scraper,schedule,layout,cli}.py`, `tests/`, `boxscores.json` manifest), just the women's league. Last refreshed: 2026-07-11.
 
 ## Automation
-- Cron `30 17 * * *` UTC (workflow comment says "19:00 UTC" — same stale-comment issue as the NZIHL sibling; trust the actual cron value).
+- Cron `30 17 * * *` UTC. Workflow comment was fixed 2026-07-11 (used to say "19:00 UTC", now correctly says 17:30 UTC, matching the NZIHL sibling fix).
 - PDF window 4 days, manifest lookahead 11 days, same decoupling rationale as nzihl-broadcast-rosters.
 - `contents: write` permission for `boxscores.json` commits + release publishing.
 
