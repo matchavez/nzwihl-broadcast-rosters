@@ -1,6 +1,6 @@
 # memory.md — matchavez/nzwihl-broadcast-rosters
 
-Self-context for Claude. **No README.md exists in this repo** (only `pyproject.toml`) — note this rather than assume one is there. This is the NZWIHL sibling of matchavez/nzihl-broadcast-rosters; same architecture (`src/nzwihl_rosters/{teams,overrides,scraper,schedule,layout,cli}.py`, `tests/`, `boxscores.json` manifest), just the women's league. Last refreshed: 2026-07-11.
+Self-context for Claude. README.md now exists (added 2026-07-11), modeled on the NZIHL sibling's README with corrected current-state details (cron, NZWIHL support, no-cache origin). This repo is the NZWIHL sibling of matchavez/nzihl-broadcast-rosters; same architecture (`src/nzwihl_rosters/{teams,overrides,scraper,schedule,layout,cli}.py`, `tests/`, `boxscores.json` manifest), just the women's league. Last refreshed: 2026-07-11.
 
 ## Automation
 - Cron `30 17 * * *` UTC (workflow comment says "19:00 UTC" — same stale-comment issue as the NZIHL sibling; trust the actual cron value).
