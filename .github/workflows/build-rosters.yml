@@ -1,7 +1,8 @@
 name: Build rosters
 
 on:
-  # Daily at 19:00 UTC = 07:00 NZST (or 08:00 NZDT). Generates roster PDFs for
+  # Daily at 17:30 UTC = ~05:30 NZST (or 06:30 NZDT), timed to land before
+  # 7am NZ time despite GitHub Actions scheduling delay. Generates roster PDFs for
   # any game starting in the next 4 days. boxscores.json also lists games up to
   # 11 days out (no PDF yet) so the hockeyrosters page can show them as 'coming
   # soon' further ahead than the portal (see --manifest-within-days below).
@@ -71,3 +72,4 @@ jobs:
           git add boxscores.json
           git commit -m "Update box-score manifest [skip ci]"
           git push
+
