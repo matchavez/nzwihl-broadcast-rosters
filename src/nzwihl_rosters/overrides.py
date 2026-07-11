@@ -2,7 +2,14 @@
 from __future__ import annotations
 
 # (team_id, jersey_number) -> (override_last, override_first | None)
-SURNAME_OVERRIDES: dict[tuple[int, str], tuple[str, str | None]] = {}
+SURNAME_OVERRIDES: dict[tuple[int, str], tuple[str, str | None]] = {
+    # Canterbury Inferno #3 Reagyn Shattock — NZWIHL stores her as "Shattock
+    # (Niskakoski)" (a maiden-name parenthetical baked into the title
+    # attribute), which the generic 3-token _split_first_last() then mangles
+    # further (first="Reagyn Shattock", last="(Niskakoski)"). Mat flagged
+    # 2026-07-11: drop the parenthetical entirely, first name unaffected.
+    (675637, "3"): ("Shattock", "Reagyn"),
+}
 
 
 def _smart_title(text: str) -> str:
