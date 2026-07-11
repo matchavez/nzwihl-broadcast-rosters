@@ -152,6 +152,33 @@ def test_goalies_parse_correctly_with_extra_by_column():
     assert sharp.sv_pct == ".920"
 
 
+def test_skaters_pim_parsed_when_column_present():
+    """stats.json needs PIM (added 2026-07-12 for the Player Lower Thirds
+    feature, ported from the NZIHL sibling)."""
+    html = (FIXTURES / "team_dtw_v2cols.html").read_text()
+    skaters = parse_skaters(html, team_id=675638)
+    by_num = {s.jersey: s for s in skaters}
+    assert by_num["19"].pim == 2
+    assert by_num["8"].pim == 31
+    assert by_num["7"].pim == 0
+
+
+def test_skaters_pim_zero_when_column_absent():
+    html = (FIXTURES / "team_dtw_min.html").read_text()
+    skaters = parse_skaters(html, team_id=675638)
+    assert all(s.pim == 0 for s in skaters)
+
+
+def test_goalies_ga_so_w_l_parsed_on_base_layout_too():
+    html = (FIXTURES / "team_dtw_min.html").read_text()
+    goalies = parse_goalies(html, team_id=675638)
+    sharp = goalies[0]
+    assert sharp.ga == 4
+    assert sharp.so == 0
+    assert sharp.w == 0
+    assert sharp.l == 0
+
+
 def test_goalies_parse_correctly_with_broken_tooltip_header():
     """Regression test (ported from NZIHL): the live GOALIE STATISTICS table
     wraps header labels in `<span title="...">` tooltips, and the GAA

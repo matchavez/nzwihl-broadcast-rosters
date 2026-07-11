@@ -56,6 +56,7 @@ jobs:
           files: |
             output/*.pdf
             output/boxscores.json
+            output/stats.json
 
       - name: Commit box-score manifest
         # Runs regardless of no_pdfs — the manifest now self-prunes stale
@@ -71,5 +72,21 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add boxscores.json
           git commit -m "Update box-score manifest [skip ci]"
+          git push
+
+      - name: Commit season stats snapshot
+        # Every registered team's season skater/goalie/coach stats, every
+        # run — independent of the PDF/manifest windows (see stats_export.py).
+        # Feeds the Player Lower Thirds control page's season stat rows.
+        run: |
+          [ -f output/stats.json ] || { echo "no stats.json"; exit 0; }
+          cp output/stats.json stats.json
+          new=$(jq -S 'del(.generated_at)' stats.json 2>/dev/null || cat stats.json)
+          old=$(git show HEAD:stats.json 2>/dev/null | jq -S 'del(.generated_at)' 2>/dev/null || echo "")
+          if [ "$new" = "$old" ]; then echo "stats.json unchanged (ignoring generated_at)"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add stats.json
+          git commit -m "Update season stats snapshot [skip ci]"
           git push
 

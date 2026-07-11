@@ -13,6 +13,7 @@ from pathlib import Path
 from .layout import build_roster_pdf, GameInfo
 from .schedule import upcoming_within, group_into_series, expand_to_series, Game, fetch_schedule_html, parse_schedule
 from . import boxscores
+from . import stats_export
 from .scraper import scrape_team, fetch_personnel_html, parse_coaches
 
 
@@ -137,6 +138,16 @@ def main(argv: list[str] | None = None) -> int:
               f"{n_ok} gameids resolved, stale entries >{boxscores.DEFAULT_KEEP_DAYS}d pruned)")
     except Exception as exc:  # noqa: BLE001 — best-effort, never abort the run
         print(f"    ! boxscores manifest failed: {exc}", file=sys.stderr)
+
+    # Season stats.json — every registered team, every run (independent of the
+    # PDF/manifest windows above). Best-effort: a scrape hiccup for one team
+    # just omits that team this run rather than aborting the whole pipeline.
+    try:
+        stats_payload = stats_export.write_stats_json(args.output / "stats.json", league_key="nzwihl")
+        n_teams = len(stats_payload["teams"])
+        print(f"    → wrote stats.json ({n_teams}/{len(stats_export.TEAMS)} teams scraped)")
+    except Exception as exc:  # noqa: BLE001 — best-effort, never abort the run
+        print(f"    ! stats.json export failed: {exc}", file=sys.stderr)
     return 0
 
 

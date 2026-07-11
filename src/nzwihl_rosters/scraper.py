@@ -40,6 +40,7 @@ class SkaterRow:
     a: int
     flag: str  # "" / "C" / "A" / "IM" / "AF" / "RO"
     plus_minus: str = ""   # "" if the page revision doesn't carry a +/- column
+    pim: int = 0            # penalty minutes, 0 if the page revision doesn't carry the column
 
 
 @dataclass
@@ -52,6 +53,10 @@ class GoalieRow:
     sv_pct: str
     flag: str
     mp: int = 0
+    ga: int = 0             # goals against, 0 if column absent
+    so: int = 0             # shutouts, 0 if column absent
+    w: int = 0              # wins, 0 if column absent
+    l: int = 0              # losses, 0 if column absent
 
 
 @dataclass
@@ -182,6 +187,7 @@ def parse_skaters(html: str, team_id: int) -> list[SkaterRow]:
     idx_g   = col.get("G", 5)
     idx_a   = col.get("A", 6)
     idx_pm  = col.get("+/-")  # None on layouts that don't carry it
+    idx_pim = col.get("PIM")  # None on layouts that don't carry it
 
     rows: list[SkaterRow] = []
     for row_match in _TR_RE.finditer(block_html):
@@ -201,13 +207,19 @@ def parse_skaters(html: str, team_id: int) -> list[SkaterRow]:
         except ValueError:
             continue
         plus_minus = cells[idx_pm] if (idx_pm is not None and idx_pm < len(cells)) else ""
+        pim = 0
+        if idx_pim is not None and idx_pim < len(cells):
+            try:
+                pim = int(cells[idx_pim]) if cells[idx_pim] not in ("", "-") else 0
+            except ValueError:
+                pim = 0
         first_raw, last_raw = _split_first_last(full_name)
         first, last = normalize_name(first_raw, last_raw, team_id, jersey)
         flag = _row_flag(row_html)
         rows.append(SkaterRow(
             jersey=jersey, last=last.upper() if last else "",
             first=first, position=position,
-            gp=gp, g=g, a=a, flag=flag, plus_minus=plus_minus,
+            gp=gp, g=g, a=a, flag=flag, plus_minus=plus_minus, pim=pim,
         ))
     return rows
 
@@ -230,6 +242,18 @@ def parse_goalies(html: str, team_id: int) -> list[GoalieRow]:
     idx_mp     = col.get("MP", 9)
     idx_gaa    = col.get("GAA", 11)
     idx_sv_pct = col.get("SV%", 15)
+    idx_ga     = col.get("GA")   # None on layouts that don't carry it
+    idx_so     = col.get("SO")
+    idx_w      = col.get("W")
+    idx_l      = col.get("L")
+
+    def _int_cell(cells, idx):
+        if idx is None or idx >= len(cells):
+            return 0
+        try:
+            return int(cells[idx]) if cells[idx] not in ("", "-") else 0
+        except ValueError:
+            return 0
 
     rows: list[GoalieRow] = []
     for row_match in _TR_RE.finditer(block_html):
@@ -252,12 +276,17 @@ def parse_goalies(html: str, team_id: int) -> list[GoalieRow]:
             mp = int(cells[idx_mp]) if cells[idx_mp] not in ("", "-") else 0
         except ValueError:
             mp = 0
+        ga = _int_cell(cells, idx_ga)
+        so = _int_cell(cells, idx_so)
+        w = _int_cell(cells, idx_w)
+        l = _int_cell(cells, idx_l)
         first_raw, last_raw = _split_first_last(full_name)
         first, last = normalize_name(first_raw, last_raw, team_id, jersey)
         flag = _row_flag(row_html)
         rows.append(GoalieRow(
             jersey=jersey, last=last.upper() if last else "",
             first=first, gp=gp, gaa=gaa, sv_pct=sv_pct, flag=flag, mp=mp,
+            ga=ga, so=so, w=w, l=l,
         ))
     return rows
 
