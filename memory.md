@@ -22,6 +22,19 @@ repo's memory.md for the full back-story — then ported here verbatim.
 `away_coaches`/`home_coaches` kwargs default `None`, so it's additive, not
 breaking.
 
+## stats.json export (2026-07-12)
+Ported from the NZIHL sibling verbatim: `src/nzwihl_rosters/stats_export.py`,
+wired into `cli.py` as a best-effort step after the boxscores manifest write.
+Emits `stats.json` at repo root (`{"generated_at","league":"nzwihl","teams":{"<TLA>":{...}}}`),
+same shape and same header-label column-lookup robustness as NZIHL (skaters
+now carry `pim`; goalies carry `ga`/`so`/`w`/`l`). `build-rosters.yml` commits
+it with content-diffing so an unchanged day produces no commit.
+
+**Why it exists:** feeds the new **Player Lower Thirds** control page in
+`matchavez/hockey` (`hockey/lowerthirds/` + `activity-banner/`) -- this repo
+and its NZIHL sibling are the sole source of season stat totals for that
+project. See Claude's `nzihl-player-lower-thirds` memory for the full design.
+
 ## Known gotchas fixed here
 - **Month-boundary `last_final_gameid` bug (2026-07-08):** this is where the bug was *first* found (NZWIHL/Inferno hit 0/4 gameids resolved when the last Final fell in the prior calendar month) — root cause fixed here, then pre-emptively ported to the NZIHL sibling.
 - **Venue normalization (2026-07-01):** scraped schedule venue text is normalized to the canonical venue list (Paradice Avondale/Botany, Alpine Ice Centre, Dunedin Ice Stadium, Queenstown Ice Arena); `Team.home_venue` fallbacks fixed at the same time.
