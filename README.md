@@ -10,6 +10,10 @@ For each upcoming series within the next 4 days, one A4 portrait PDF:
 
 - Two columns, away team on the left, home team on the right.
 - Centred team-name header in the team's primary colour.
+- A compact `HC <name>   AC <name>, <name>` coaching-staff line under each
+  team's header band, scraped from `personnel.cfm`. No line is drawn if a
+  team has no Head/Assistant Coach listed — the lookup is best-effort and
+  never fails the whole PDF.
 - Goalie cards across the top (GP > 0 only) with `GP / GAA / SV%`.
 - Skaters sorted by jersey #, with `POS  G  A` columns.
 - Top-3 scorers per team (by G+A) get a pale honey row highlight.
@@ -23,7 +27,7 @@ For each upcoming series within the next 4 days, one A4 portrait PDF:
 src/nzwihl_rosters/
   teams.py         # registry: team_id, display name, colours, home venue
   overrides.py     # explicit name overrides + title-casing
-  scraper.py       # parses stats team pages into Skater/GoalieRow lists
+  scraper.py       # parses stats team pages + personnel.cfm into Skater/Goalie/CoachRow lists
   schedule.py      # parses the schedule into a list of upcoming Games
   layout.py        # the single-page PDF builder
   cli.py           # CLI: schedule → filter window → group → render
