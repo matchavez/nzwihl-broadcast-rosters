@@ -54,10 +54,34 @@ class GoalieRow:
     mp: int = 0
 
 
+@dataclass
+class CoachRow:
+    """One coaching-staff entry from personnel.cfm. Only Head Coach /
+    Assistant Coach rows are kept — personnel.cfm also lists front-office
+    roles (Team Staff, Physio, General Manager, Team Lead) that aren't
+    coaches and aren't in scope for the roster PDF's coaches line."""
+    title: str   # "Head Coach" / "Assistant Coach"
+    first: str
+    last: str
+
+
+PERSONNEL_URL = "https://admin.esportsdesk.com/leagues/personnel.cfm"
+
+_COACH_TITLES = {"head coach", "assistant coach"}
+_COACH_ORDER = {"head coach": 0, "assistant coach": 1}
+
+
 def fetch_team_html(team_id: int, client_id: int = 7132, league_id: int = 35501) -> str:
     """Download the stats_1team page HTML for `team_id`."""
     params = {"clientid": client_id, "leagueid": league_id, "teamid": team_id}
     url = f"{STATS_URL}?{urlencode(params)}"
+    return fetch(url)
+
+
+def fetch_personnel_html(team_id: int, client_id: int = 7132, league_id: int = 35501) -> str:
+    """Download the personnel.cfm page HTML for `team_id` (coaching staff)."""
+    params = {"clientid": client_id, "leagueid": league_id, "teamid": team_id}
+    url = f"{PERSONNEL_URL}?{urlencode(params)}"
     return fetch(url)
 
 
@@ -235,6 +259,28 @@ def parse_goalies(html: str, team_id: int) -> list[GoalieRow]:
             jersey=jersey, last=last.upper() if last else "",
             first=first, gp=gp, gaa=gaa, sv_pct=sv_pct, flag=flag, mp=mp,
         ))
+    return rows
+
+
+def parse_coaches(html: str) -> list[CoachRow]:
+    """Parse personnel.cfm's Title/Name table into Head Coach / Assistant
+    Coach rows (see CoachRow). The Name cell holds first/last on separate
+    lines within one <td> -- a literal newline in the source, not a <br> --
+    so split on whitespace/newlines rather than looking for a tag."""
+    rows: list[CoachRow] = []
+    for row_match in _TR_RE.finditer(html):
+        cells = [_clean(td) for td in _TD_RE.findall(row_match.group(1))]
+        if len(cells) != 2:
+            continue
+        title = cells[0].strip()
+        if title.lower() not in _COACH_TITLES:
+            continue
+        parts = [p.strip() for p in cells[1].split("\n") if p.strip()]
+        if not parts:
+            continue
+        first, last = (parts[0], " ".join(parts[1:])) if len(parts) > 1 else ("", parts[0])
+        rows.append(CoachRow(title=title, first=first, last=last))
+    rows.sort(key=lambda r: _COACH_ORDER.get(r.title.lower(), 2))
     return rows
 
 

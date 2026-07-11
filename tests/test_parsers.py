@@ -172,3 +172,23 @@ def test_goalies_parse_correctly_with_broken_tooltip_header():
     assert ashe.gp == 5 and ashe.mp == 301
     assert ashe.gaa == "3.39", f"expected gaa=3.39, got {ashe.gaa!r}"
     assert ashe.sv_pct == ".909"
+
+
+def test_coaches_parse_correctly():
+    from nzwihl_rosters.scraper import parse_coaches
+    html = (FIXTURES / "personnel_steel_min.html").read_text()
+    coaches = parse_coaches(html)
+    assert len(coaches) == 3
+    assert [c.title for c in coaches] == ["Head Coach", "Assistant Coach", "Assistant Coach"]
+
+    head = coaches[0]
+    assert head.first == "Darren" and head.last == "Blong"
+
+    assistants = coaches[1:]
+    assert {(a.first, a.last) for a in assistants} == {("Markku", "Multaharju"), ("Rachel", "Park")}
+
+
+def test_coaches_parse_empty_when_none_listed():
+    from nzwihl_rosters.scraper import parse_coaches
+    html = (FIXTURES / "personnel_no_coaches_min.html").read_text()
+    assert parse_coaches(html) == []

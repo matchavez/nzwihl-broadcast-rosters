@@ -31,7 +31,7 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont as PDFTrueTypeFont
 
-from .scraper import SkaterRow, GoalieRow
+from .scraper import SkaterRow, GoalieRow, CoachRow
 from .teams import Team
 
 # House font: Inter, with tabular figures ('tnum') baked into the cmap as the
@@ -109,6 +109,8 @@ def build_roster_pdf(
     away_team: Team, away_skaters: list[SkaterRow], away_goalies: list[GoalieRow],
     home_team: Team, home_skaters: list[SkaterRow], home_goalies: list[GoalieRow],
     game_info: GameInfo,
+    away_coaches: list[CoachRow] | None = None,
+    home_coaches: list[CoachRow] | None = None,
 ) -> str:
     """Build the PDF; return the output path."""
     PAGE = portrait(A4)
@@ -169,7 +171,7 @@ def build_roster_pdf(
         c.setFillColor(title_color); c.setFont(FONT_BOLD, HEADER_FS)
         c.drawString(start_x + logo_box + gap, baseline, text)
 
-    def draw_team(x: float, team: Team, skaters: list[SkaterRow], played_goalies: list[GoalieRow]):
+    def draw_team(x: float, team: Team, skaters: list[SkaterRow], played_goalies: list[GoalieRow], coaches: list[CoachRow]):
         y_top = content_top
         primary = HexColor(team.primary_hex)
         # Text drawn directly on the white page (jersey #, captain letter) uses
@@ -187,6 +189,78 @@ def build_roster_pdf(
         c.setFillColor(primary); c.rect(x, y_top - band_h, col_w, band_h, fill=1, stroke=0)
         _draw_header_badge_and_name(x, team, title_color, y_top, band_h)
         cur_y = y_top - band_h - 5*mm
+
+        # Compact one-line coaching-staff strip: "HC <name>   AC <names>".
+        # No section header/rule — kept deliberately terse to leave the bulk
+        # of the column for skaters (Mat, 2026-07-11: "lose Coaching Staff...
+        # get it onto one line"). Auto-shrinks the name font and, as a
+        # last-resort safety net, ellipsis-truncates the final segment so a
+        # long assistant-coach list can never bleed past the column edge —
+        # the first side-by-side draft (with a header+rule, before this
+        # safety net existed) did exactly that on a team with long assistant
+        # names, before being redesigned into this compact single line.
+        if coaches:
+            head = next((cr for cr in coaches if cr.title.lower() == "head coach"), None)
+            assistants = [cr for cr in coaches if cr.title.lower() == "assistant coach"]
+
+            segs = []
+            if head:
+                segs.append(("HC", f"{head.first} {head.last}".strip()))
+            if assistants:
+                names = ", ".join(f"{a.first} {a.last}".strip() for a in assistants)
+                segs.append(("AC", names))
+
+            if segs:
+                fs_label = 7.5
+                fs_name = 9
+                gap_after_label = 1.1*mm
+                gap_between = 4.5*mm
+
+                def _coach_line_w(local_segs, fsn):
+                    w = 0
+                    for i, (lbl, nm) in enumerate(local_segs):
+                        if i:
+                            w += gap_between
+                        w += c.stringWidth(lbl, FONT_BOLD, fs_label) + gap_after_label
+                        w += c.stringWidth(nm, FONT_SEMIBOLD, fsn)
+                    return w
+
+                while _coach_line_w(segs, fs_name) > col_w and fs_name > 7:
+                    fs_name -= 0.5
+
+                if _coach_line_w(segs, fs_name) > col_w:
+                    # Truncate the last segment's name with an ellipsis --
+                    # the segment most likely to be long (multiple
+                    # assistants) -- as a last-resort safety net.
+                    lbl, nm = segs[-1]
+                    prefix_w = 0
+                    for i, (l2, n2) in enumerate(segs[:-1]):
+                        if i:
+                            prefix_w += gap_between
+                        prefix_w += c.stringWidth(l2, FONT_BOLD, fs_label) + gap_after_label
+                    if len(segs) > 1:
+                        prefix_w += gap_between
+                    prefix_w += c.stringWidth(lbl, FONT_BOLD, fs_label) + gap_after_label
+                    max_nm_w = col_w - prefix_w
+                    text = nm
+                    while c.stringWidth(text, FONT_SEMIBOLD, fs_name) > max_nm_w and len(text) > 1:
+                        text = text[:-1]
+                    if text != nm:
+                        text = text.rstrip(", ") + "\u2026"
+                    segs[-1] = (lbl, text)
+
+                tx = x
+                baseline = cur_y
+                for i, (lbl, nm) in enumerate(segs):
+                    if i:
+                        tx += gap_between
+                    c.setFillColor(MUTED); c.setFont(FONT_BOLD, fs_label)
+                    c.drawString(tx, baseline, lbl)
+                    tx += c.stringWidth(lbl, FONT_BOLD, fs_label) + gap_after_label
+                    c.setFillColor(INK); c.setFont(FONT_SEMIBOLD, fs_name)
+                    c.drawString(tx, baseline, nm)
+                    tx += c.stringWidth(nm, FONT_SEMIBOLD, fs_name)
+                cur_y -= 5.5*mm
 
         highlight = _top3_keys(skaters)
 
@@ -418,8 +492,8 @@ def build_roster_pdf(
     away_skaters_full, away_played_g = _merge_bench_goalies_into_skaters(away_skaters, away_goalies)
     home_skaters_full, home_played_g = _merge_bench_goalies_into_skaters(home_skaters, home_goalies)
 
-    draw_team(left_x,  away_team, away_skaters_full, away_played_g)
-    draw_team(right_x, home_team, home_skaters_full, home_played_g)
+    draw_team(left_x,  away_team, away_skaters_full, away_played_g, away_coaches or [])
+    draw_team(right_x, home_team, home_skaters_full, home_played_g, home_coaches or [])
 
     # Footer
     footer_baseline = MARGIN + 1.5*mm
