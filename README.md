@@ -21,6 +21,12 @@ For each upcoming series within the next 4 days, one A4 portrait PDF:
 
 `boxscores.json` also lists games up to **11 days** out (no PDF yet), separate from the 4-day PDF window, so `hockeyrosters` can show them further ahead as "coming soon."
 
+Each run also emits `stats.json` at repo root -- season stat totals per team
+(skaters, goalies, coaches). It feeds the **Player Lower Thirds** phone
+control page over in `matchavez/hockey` (`hockey/lowerthirds/`), which fires
+stat+photo player graphics through the Activity Banner overlay. This repo
+doesn't consume it -- just publishes it.
+
 ## Project layout
 
 ```
