@@ -35,6 +35,43 @@ it with content-diffing so an unchanged day produces no commit.
 and its NZIHL sibling are the sole source of season stat totals for that
 project. See Claude's `nzihl-player-lower-thirds` memory for the full design.
 
+## Skater G/A/PTS now sourced from nzihl-season-data (2026-07-13)
+Ported from the NZIHL sibling verbatim (same day): `stats_export.py` sources
+skater goals/assists/points from `matchavez/nzihl-season-data`'s committed
+`nzwihl.json` (`derived.player_game_logs`) instead of `stats_1team.cfm`'s
+own G/A/PTS columns, falling back to the scraped value on any miss (no
+warehouse entry) or fetch failure (best-effort, same as the coaches fetch).
+`stats_1team.cfm` is still scraped for jersey/position/flag/GP/PIM and for
+every goalie/coach field -- GP in particular can't come from the warehouse
+(`player_game_logs` only has scoring games, not every game dressed).
+
+**Matching key is the RAW pre-override scraped name**, not the
+override-corrected display name -- `SkaterRow` grew a `raw_name` field
+(the exact `title="..."` text) because nzihl-season-data's parser stores
+names verbatim, parenthetical text and all. This repo's OWN Canterbury
+Inferno players are the exact case that proves it necessary: **#3 Reagyn
+Shattock** is stored as `"Reagyn Shattock (Niskakoski)"` in the warehouse
+(her maiden name, kept raw) but as `"Reagyn Shattock"` after this repo's
+own `SURNAME_OVERRIDES` correction -- normalizing the corrected name would
+silently miss her warehouse entry. `_normalize_name()` here (lowercase,
+alpha-only) intentionally mirrors nzihl-season-data's own
+`parser.normalize_name()` exactly.
+
+**Verification (2026-07-13, before shipping):** every skater on all 9
+NZIHL+NZWIHL teams checked against a live, cache-busted `stats_1team.cfm`
+fetch (use `stats_1teamV2.cfm`, not the `printPage=1` view, which can
+serve a stale snapshot up to ~2 weeks old on a low-traffic team page) --
+G/A/PTS matched exactly everywhere, INCLUDING Reagyn Shattock and
+Canterbury Inferno's other tricky name (#94 Lucy-Jane(LJ) Hart).
+
+**PIM and all goalie fields were evaluated and deliberately NOT
+migrated** -- real, unexplained mismatches turned up in live verification
+(a suspension-affected major+misconduct PIM combo on the NZIHL side, plus
+split-goalie no-decision games with no way to tell which goalie gets
+credit from `games[].goalies[]` alone). Full evidence in the NZIHL
+sibling's memory.md -- same warehouse, same finding, applies to both
+leagues equally.
+
 ## Known gotchas fixed here
 - **Month-boundary `last_final_gameid` bug (2026-07-08):** this is where the bug was *first* found (NZWIHL/Inferno hit 0/4 gameids resolved when the last Final fell in the prior calendar month) — root cause fixed here, then pre-emptively ported to the NZIHL sibling.
 - **Venue normalization (2026-07-01):** scraped schedule venue text is normalized to the canonical venue list (Paradice Avondale/Botany, Alpine Ice Centre, Dunedin Ice Stadium, Queenstown Ice Arena); `Team.home_venue` fallbacks fixed at the same time.
