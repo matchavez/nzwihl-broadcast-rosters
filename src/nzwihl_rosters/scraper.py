@@ -19,6 +19,7 @@ from html import unescape
 from urllib.parse import urlencode
 
 from .http import fetch
+from . import overrides
 from .overrides import normalize_name
 
 
@@ -108,11 +109,12 @@ def _split_first_last(full_name: str) -> tuple[str, str]:
         return ("", parts[0])
     if len(parts) == 2:
         return (parts[0], parts[1])
-    # Two-word surname allowlist — empty for now; add entries here as NZWIHL
-    # multi-word surnames are flagged (mirrors NZIHL's approach).
-    multi_word: set[str] = set()
+    # Two-word surnames -- checked against the shared allowlist in
+    # overrides.py (referenced via the module object, not a bare
+    # `from .overrides import MULTI_WORD_SURNAMES`, so a later
+    # load_remote_overrides() rebind is actually picked up here).
     tail2 = " ".join(parts[-2:]).lower()
-    if tail2 in multi_word:
+    if tail2 in overrides.MULTI_WORD_SURNAMES:
         return (" ".join(parts[:-2]), " ".join(parts[-2:]))
     return (" ".join(parts[:-1]), parts[-1])
 

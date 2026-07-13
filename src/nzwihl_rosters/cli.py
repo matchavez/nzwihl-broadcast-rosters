@@ -15,6 +15,7 @@ from .schedule import upcoming_within, group_into_series, expand_to_series, Game
 from . import boxscores
 from . import stats_export
 from .scraper import scrape_team, fetch_personnel_html, parse_coaches
+from . import overrides
 
 
 def _round_label(start: datetime) -> str:
@@ -83,6 +84,10 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     args.output.mkdir(parents=True, exist_ok=True)
+
+    # Single source of truth for player-name corrections (see overrides.py) --
+    # best-effort, falls back to the hardcoded snapshot on any failure.
+    overrides.load_remote_overrides()
 
     schedule_html = fetch_schedule_html()
     window_games = upcoming_within(args.within_days, html=schedule_html)
