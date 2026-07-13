@@ -41,6 +41,13 @@ class SkaterRow:
     flag: str  # "" / "C" / "A" / "IM" / "AF" / "RO"
     plus_minus: str = ""   # "" if the page revision doesn't carry a +/- column
     pim: int = 0            # penalty minutes, 0 if the page revision doesn't carry the column
+    raw_name: str = ""      # exact scraped title="..." text, BEFORE any name
+                             # split/override correction is applied -- this is
+                             # the same string esportsdesk's box-score parser
+                             # (matchavez/nzihl-season-data) preserves verbatim
+                             # in `goals[].who`/`assists[]`, parenthetical
+                             # nicknames and all, so it's the key stats_export.py
+                             # uses to look a player up in that warehouse.
 
 
 @dataclass
@@ -220,6 +227,7 @@ def parse_skaters(html: str, team_id: int) -> list[SkaterRow]:
             jersey=jersey, last=last.upper() if last else "",
             first=first, position=position,
             gp=gp, g=g, a=a, flag=flag, plus_minus=plus_minus, pim=pim,
+            raw_name=full_name,
         ))
     return rows
 
