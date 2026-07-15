@@ -2,19 +2,6 @@
   "league": "NZWIHL",
   "games": [
     {
-      "date": "2026-07-11",
-      "time": "5:00 PM",
-      "datetime": "2026-07-11T17:00:00+12:00",
-      "away": "Wakatipu Wild",
-      "away_code": "WLD",
-      "home": "Canterbury Inferno",
-      "home_code": "CIN",
-      "venue": "Alpine Ice Centre",
-      "gameid": 2520019,
-      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520019",
-      "in_core_window": true
-    },
-    {
       "date": "2026-07-12",
       "time": "5:00 PM",
       "datetime": "2026-07-12T17:00:00+12:00",
