@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-13",
+  "generated_at": "2026-07-15",
   "league": "nzwihl",
   "teams": {
     "AST": {
@@ -1271,6 +1271,30 @@
         },
         {
           "a": 1,
+          "first": "Bridey",
+          "flag": "",
+          "g": 0,
+          "gp": 8,
+          "last": "SANGSTER",
+          "number": "10",
+          "pim": 4,
+          "position": "F",
+          "pts": 1
+        },
+        {
+          "a": 1,
+          "first": "Zoe",
+          "flag": "",
+          "g": 0,
+          "gp": 8,
+          "last": "THURSTON",
+          "number": "88",
+          "pim": 2,
+          "position": "D",
+          "pts": 1
+        },
+        {
+          "a": 1,
           "first": "Gracie",
           "flag": "",
           "g": 0,
@@ -1302,30 +1326,6 @@
           "last": "DIXON",
           "number": "23",
           "pim": 0,
-          "position": "D",
-          "pts": 0
-        },
-        {
-          "a": 0,
-          "first": "Bridey",
-          "flag": "",
-          "g": 0,
-          "gp": 8,
-          "last": "SANGSTER",
-          "number": "10",
-          "pim": 4,
-          "position": "F",
-          "pts": 0
-        },
-        {
-          "a": 0,
-          "first": "Zoe",
-          "flag": "",
-          "g": 0,
-          "gp": 8,
-          "last": "THURSTON",
-          "number": "88",
-          "pim": 2,
           "position": "D",
           "pts": 0
         },
