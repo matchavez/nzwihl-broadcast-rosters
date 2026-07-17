@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-15",
+  "generated_at": "2026-07-17",
   "league": "nzwihl",
   "teams": {
     "AST": {
@@ -193,7 +193,7 @@
           "first": "Keira",
           "flag": "RO",
           "g": 0,
-          "gp": 4,
+          "gp": 2,
           "last": "HUNTER",
           "number": "28",
           "pim": 0,
@@ -363,7 +363,7 @@
           "g": 0,
           "gp": 0,
           "last": "EASTON",
-          "number": "12",
+          "number": "34",
           "pim": 0,
           "position": "D",
           "pts": 0
@@ -387,7 +387,7 @@
           "g": 0,
           "gp": 0,
           "last": "MU",
-          "number": "34",
+          "number": "12",
           "pim": 0,
           "position": "-",
           "pts": 0
