@@ -2,19 +2,6 @@
   "league": "NZWIHL",
   "games": [
     {
-      "date": "2026-07-18",
-      "time": "4:30 PM",
-      "datetime": "2026-07-18T16:30:00+12:00",
-      "away": "Canterbury Inferno",
-      "away_code": "CIN",
-      "home": "Auckland Steel",
-      "home_code": "AST",
-      "venue": "Paradice Avondale",
-      "gameid": 2520021,
-      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520021",
-      "in_core_window": true
-    },
-    {
       "date": "2026-07-19",
       "time": "4:30 PM",
       "datetime": "2026-07-19T16:30:00+12:00",
