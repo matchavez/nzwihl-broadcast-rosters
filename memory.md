@@ -79,6 +79,12 @@ leagues equally.
 - **`boxscores.json` self-pruning (2026-07-02):** drops entries more than 3 days past their date so the manifest doesn't grow unbounded.
 - 2026-07-04: brought roster PDFs to visual parity with NZIHL (header-driven scraper, house font, goalie cap).
 
+## 2026-07-27: player_id added to stats.json
+Same fix as the NZIHL sibling, ported across: SkaterRow/GoalieRow and stats.json now carry
+`player_id`. See that repo's memory.md for the full rationale (built for the new
+pronunciation-guide system in matchavez/nzihl-broadcast-assets). Verified live via
+workflow_dispatch -- player_id populated for all 4 teams.
+
 ## Related repos
 - **matchavez/nzihl-broadcast-rosters** — the men's-league twin; fixes should generally land on one then get ported to the other (check both when debugging a shared-code-path issue).
 - **matchavez/hockeyrosters** — consumes this repo's release PDFs + `boxscores.json`.
