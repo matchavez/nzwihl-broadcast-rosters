@@ -13,7 +13,7 @@ def test_skater_dict_shape_and_pts_derivation():
     html = (FIXTURES / "team_dtw_v2cols.html").read_text()
     skaters = parse_skaters(html, team_id=675638)
     d = stats_export._skater_dict(skaters[0], game_logs={})
-    assert set(d) == {"number", "first", "last", "position", "flag", "gp", "g", "a", "pts", "pim"}
+    assert set(d) == {"number", "first", "last", "position", "flag", "gp", "g", "a", "pts", "pim", "player_id"}
     assert d["pts"] == d["g"] + d["a"]
 
 
@@ -73,7 +73,7 @@ def test_goalie_dict_shape():
     html = (FIXTURES / "team_dtw_v2cols.html").read_text()
     goalies = parse_goalies(html, team_id=675638)
     d = stats_export._goalie_dict(goalies[0])
-    assert set(d) == {"number", "first", "last", "flag", "gp", "min", "ga", "gaa", "sv_pct", "so", "w", "l"}
+    assert set(d) == {"number", "first", "last", "flag", "gp", "min", "ga", "gaa", "sv_pct", "so", "w", "l", "player_id"}
 
 
 def test_write_stats_json_shape(tmp_path):

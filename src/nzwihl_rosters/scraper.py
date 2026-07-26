@@ -40,6 +40,8 @@ class SkaterRow:
     g: int
     a: int
     flag: str  # "" / "C" / "A" / "IM" / "AF" / "RO"
+    player_id: int = 0     # esportsdesk playerID, parsed from the profile-link href;
+                            # 0 if a row somehow lacks a link (shouldn't happen in practice).
     plus_minus: str = ""   # "" if the page revision doesn't carry a +/- column
     pim: int = 0            # penalty minutes, 0 if the page revision doesn't carry the column
     raw_name: str = ""      # exact scraped title="..." text, BEFORE any name
@@ -60,6 +62,7 @@ class GoalieRow:
     gaa: str
     sv_pct: str
     flag: str
+    player_id: int = 0     # esportsdesk playerID, parsed from the profile-link href.
     mp: int = 0
     ga: int = 0             # goals against, 0 if column absent
     so: int = 0             # shutouts, 0 if column absent
@@ -169,6 +172,20 @@ def _player_full_name(row_html: str) -> str | None:
     return m.group(2)
 
 
+def _player_id(row_html: str) -> int:
+    """Pull the player's esportsdesk playerID from the profile-link href.
+    Returns 0 if the row has no matching link (shouldn't happen for a real
+    player row, but this must never raise -- a missing ID degrades to 0
+    rather than dropping the player)."""
+    m = _PLAYER_LINK.search(row_html)
+    if not m:
+        return 0
+    try:
+        return int(m.group(1))
+    except ValueError:
+        return 0
+
+
 _TH_RE = re.compile(r"<th[^>]*>([\s\S]*?)</th>", re.IGNORECASE)
 
 
@@ -225,11 +242,12 @@ def parse_skaters(html: str, team_id: int) -> list[SkaterRow]:
         first_raw, last_raw = _split_first_last(full_name)
         first, last = normalize_name(first_raw, last_raw, team_id, jersey)
         flag = _row_flag(row_html)
+        pid = _player_id(row_html)
         rows.append(SkaterRow(
             jersey=jersey, last=last.upper() if last else "",
             first=first, position=position,
             gp=gp, g=g, a=a, flag=flag, plus_minus=plus_minus, pim=pim,
-            raw_name=full_name,
+            raw_name=full_name, player_id=pid,
         ))
     return rows
 
@@ -293,10 +311,11 @@ def parse_goalies(html: str, team_id: int) -> list[GoalieRow]:
         first_raw, last_raw = _split_first_last(full_name)
         first, last = normalize_name(first_raw, last_raw, team_id, jersey)
         flag = _row_flag(row_html)
+        pid = _player_id(row_html)
         rows.append(GoalieRow(
             jersey=jersey, last=last.upper() if last else "",
             first=first, gp=gp, gaa=gaa, sv_pct=sv_pct, flag=flag, mp=mp,
-            ga=ga, so=so, w=w, l=l,
+            ga=ga, so=so, w=w, l=l, player_id=pid,
         ))
     return rows
 
