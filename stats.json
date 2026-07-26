@@ -32,6 +32,7 @@
           "last": "BUTTERFIELD",
           "min": 0,
           "number": "31",
+          "player_id": 1937062,
           "so": 0,
           "sv_pct": "-",
           "w": 0
@@ -46,6 +47,7 @@
           "last": "GIBSON",
           "min": 304,
           "number": "29",
+          "player_id": 2198272,
           "so": 2,
           "sv_pct": ".939",
           "w": 5
@@ -60,6 +62,7 @@
           "last": "HENRY",
           "min": 360,
           "number": "1",
+          "player_id": 1938223,
           "so": 2,
           "sv_pct": ".928",
           "w": 6
@@ -74,6 +77,7 @@
           "last": "WICKES-SMITH",
           "min": 60,
           "number": "30",
+          "player_id": 2141575,
           "so": 0,
           "sv_pct": ".800",
           "w": 1
@@ -89,6 +93,7 @@
           "last": "BLONG",
           "number": "4",
           "pim": 10,
+          "player_id": 2239994,
           "position": "F",
           "pts": 35
         },
@@ -101,6 +106,7 @@
           "last": "HORNER-PASCOE",
           "number": "21",
           "pim": 0,
+          "player_id": 1970962,
           "position": "F",
           "pts": 26
         },
@@ -113,6 +119,7 @@
           "last": "ASKENAZY",
           "number": "23",
           "pim": 4,
+          "player_id": 2462795,
           "position": "F",
           "pts": 21
         },
@@ -125,6 +132,7 @@
           "last": "PATRON",
           "number": "7",
           "pim": 6,
+          "player_id": 2146856,
           "position": "D",
           "pts": 17
         },
@@ -137,6 +145,7 @@
           "last": "MULARI",
           "number": "25",
           "pim": 0,
+          "player_id": 2088249,
           "position": "F",
           "pts": 14
         },
@@ -149,6 +158,7 @@
           "last": "MURRAY",
           "number": "6",
           "pim": 0,
+          "player_id": 1970961,
           "position": "F",
           "pts": 12
         },
@@ -161,6 +171,7 @@
           "last": "SHIELDS",
           "number": "19",
           "pim": 0,
+          "player_id": 1952810,
           "position": "F",
           "pts": 10
         },
@@ -173,6 +184,7 @@
           "last": "JONES",
           "number": "9",
           "pim": 6,
+          "player_id": 1944394,
           "position": "D",
           "pts": 8
         },
@@ -185,6 +197,7 @@
           "last": "THOMAS",
           "number": "27",
           "pim": 4,
+          "player_id": 2349195,
           "position": "F",
           "pts": 4
         },
@@ -197,6 +210,7 @@
           "last": "KEITH",
           "number": "18",
           "pim": 4,
+          "player_id": 1936897,
           "position": "F",
           "pts": 4
         },
@@ -209,6 +223,7 @@
           "last": "ROSSER",
           "number": "2",
           "pim": 0,
+          "player_id": 2234098,
           "position": "D",
           "pts": 3
         },
@@ -221,6 +236,7 @@
           "last": "MU",
           "number": "12",
           "pim": 0,
+          "player_id": 2471055,
           "position": "-",
           "pts": 3
         },
@@ -233,6 +249,7 @@
           "last": "HUNTER",
           "number": "28",
           "pim": 0,
+          "player_id": 2148807,
           "position": "F",
           "pts": 3
         },
@@ -245,6 +262,7 @@
           "last": "KEEFE",
           "number": "16",
           "pim": 0,
+          "player_id": 1955510,
           "position": "F",
           "pts": 2
         },
@@ -257,6 +275,7 @@
           "last": "SUTTON",
           "number": "20",
           "pim": 0,
+          "player_id": 2266164,
           "position": "D",
           "pts": 1
         },
@@ -269,6 +288,7 @@
           "last": "HIDVEGI",
           "number": "3",
           "pim": 4,
+          "player_id": 1937232,
           "position": "D",
           "pts": 1
         },
@@ -281,6 +301,7 @@
           "last": "CUNNINGHAM",
           "number": "14",
           "pim": 0,
+          "player_id": 1938173,
           "position": "D",
           "pts": 1
         },
@@ -293,6 +314,7 @@
           "last": "THORNE",
           "number": "22",
           "pim": 2,
+          "player_id": 1937629,
           "position": "F",
           "pts": 1
         },
@@ -305,6 +327,7 @@
           "last": "MCLEAN",
           "number": "17",
           "pim": 0,
+          "player_id": 1941431,
           "position": "D",
           "pts": 0
         },
@@ -317,6 +340,7 @@
           "last": "RICHMOND",
           "number": "11",
           "pim": 4,
+          "player_id": 1938307,
           "position": "D",
           "pts": 0
         },
@@ -329,6 +353,7 @@
           "last": "TUNNICLIFFE",
           "number": "10",
           "pim": 0,
+          "player_id": 1939339,
           "position": "F",
           "pts": 0
         },
@@ -341,6 +366,7 @@
           "last": "PANG",
           "number": "26",
           "pim": 0,
+          "player_id": 1945218,
           "position": "F",
           "pts": 0
         },
@@ -353,6 +379,7 @@
           "last": "HARVEY",
           "number": "8",
           "pim": 0,
+          "player_id": 2244567,
           "position": "F",
           "pts": 0
         },
@@ -365,6 +392,7 @@
           "last": "ANG",
           "number": "43",
           "pim": 0,
+          "player_id": 2446938,
           "position": "D",
           "pts": 0
         },
@@ -377,6 +405,7 @@
           "last": "CHILD",
           "number": "15",
           "pim": 0,
+          "player_id": 1936901,
           "position": "F",
           "pts": 0
         },
@@ -389,6 +418,7 @@
           "last": "DAVIDSON",
           "number": "5",
           "pim": 0,
+          "player_id": 1658947,
           "position": "F",
           "pts": 0
         },
@@ -401,6 +431,7 @@
           "last": "EASTON",
           "number": "34",
           "pim": 0,
+          "player_id": 1956628,
           "position": "D",
           "pts": 0
         },
@@ -413,6 +444,7 @@
           "last": "MEYER",
           "number": "36",
           "pim": 0,
+          "player_id": 2342352,
           "position": "D",
           "pts": 0
         },
@@ -425,6 +457,7 @@
           "last": "PYE",
           "number": "13",
           "pim": 0,
+          "player_id": 1937144,
           "position": "D",
           "pts": 0
         },
@@ -437,6 +470,7 @@
           "last": "REEVES",
           "number": "24",
           "pim": 0,
+          "player_id": 1937105,
           "position": "F",
           "pts": 0
         }
@@ -473,6 +507,7 @@
           "last": "MORGULIS",
           "min": 0,
           "number": "1",
+          "player_id": 1970793,
           "so": 0,
           "sv_pct": "-",
           "w": 0
@@ -487,6 +522,7 @@
           "last": "SALAY",
           "min": 0,
           "number": "33",
+          "player_id": 1952802,
           "so": 0,
           "sv_pct": "-",
           "w": 0
@@ -501,6 +537,7 @@
           "last": "LEE",
           "min": 125,
           "number": "34",
+          "player_id": 2156625,
           "so": 0,
           "sv_pct": ".906",
           "w": 1
@@ -515,6 +552,7 @@
           "last": "CRUICKSHANK",
           "min": 580,
           "number": "28",
+          "player_id": 2028145,
           "so": 0,
           "sv_pct": ".874",
           "w": 2
@@ -529,6 +567,7 @@
           "last": "WICKES-SMITH",
           "min": 20,
           "number": "25",
+          "player_id": 2141575,
           "so": 0,
           "sv_pct": ".556",
           "w": 0
@@ -544,6 +583,7 @@
           "last": "GUERIN",
           "number": "10",
           "pim": 12,
+          "player_id": 2101663,
           "position": "F",
           "pts": 10
         },
@@ -556,6 +596,7 @@
           "last": "GORDON",
           "number": "27",
           "pim": 4,
+          "player_id": 1937245,
           "position": "F",
           "pts": 8
         },
@@ -568,6 +609,7 @@
           "last": "SHATTOCK",
           "number": "3",
           "pim": 4,
+          "player_id": 1953992,
           "position": "D",
           "pts": 5
         },
@@ -580,6 +622,7 @@
           "last": "HART",
           "number": "94",
           "pim": 6,
+          "player_id": 1947931,
           "position": "F",
           "pts": 5
         },
@@ -592,6 +635,7 @@
           "last": "KOVIESSEN",
           "number": "4",
           "pim": 0,
+          "player_id": 1953927,
           "position": "F",
           "pts": 2
         },
@@ -604,6 +648,7 @@
           "last": "PATCHETT",
           "number": "21",
           "pim": 10,
+          "player_id": 2203867,
           "position": "F",
           "pts": 2
         },
@@ -616,6 +661,7 @@
           "last": "GODFREY",
           "number": "69",
           "pim": 16,
+          "player_id": 2092065,
           "position": "D",
           "pts": 1
         },
@@ -628,6 +674,7 @@
           "last": "GIBBINGS",
           "number": "44",
           "pim": 2,
+          "player_id": 1957914,
           "position": "D",
           "pts": 1
         },
@@ -640,6 +687,7 @@
           "last": "JEFFERIES",
           "number": "14",
           "pim": 4,
+          "player_id": 1938955,
           "position": "F",
           "pts": 1
         },
@@ -652,6 +700,7 @@
           "last": "BONIFACE",
           "number": "7",
           "pim": 0,
+          "player_id": 2454583,
           "position": "D",
           "pts": 0
         },
@@ -664,6 +713,7 @@
           "last": "MATTHEWS",
           "number": "42",
           "pim": 0,
+          "player_id": 2209869,
           "position": "D",
           "pts": 0
         },
@@ -676,6 +726,7 @@
           "last": "TOBIN",
           "number": "64",
           "pim": 4,
+          "player_id": 1954556,
           "position": "F",
           "pts": 0
         },
@@ -688,6 +739,7 @@
           "last": "ECCLETON-ALLEN",
           "number": "88",
           "pim": 2,
+          "player_id": 1972940,
           "position": "F",
           "pts": 0
         },
@@ -700,6 +752,7 @@
           "last": "BARNETT",
           "number": "8",
           "pim": 6,
+          "player_id": 2097942,
           "position": "D",
           "pts": 0
         },
@@ -712,6 +765,7 @@
           "last": "JONKER",
           "number": "20",
           "pim": 2,
+          "player_id": 1939722,
           "position": "F",
           "pts": 0
         },
@@ -724,6 +778,7 @@
           "last": "STRAIN",
           "number": "19",
           "pim": 0,
+          "player_id": 2411681,
           "position": "F",
           "pts": 0
         },
@@ -736,6 +791,7 @@
           "last": "WALLACE",
           "number": "16",
           "pim": 2,
+          "player_id": 2085416,
           "position": "D",
           "pts": 0
         },
@@ -748,6 +804,7 @@
           "last": "HARROP",
           "number": "22",
           "pim": 0,
+          "player_id": 1972699,
           "position": "F",
           "pts": 0
         },
@@ -760,6 +817,7 @@
           "last": "ZHANG",
           "number": "97",
           "pim": 2,
+          "player_id": 1937438,
           "position": "F",
           "pts": 0
         },
@@ -772,6 +830,7 @@
           "last": "HODGE",
           "number": "86",
           "pim": 2,
+          "player_id": 1937363,
           "position": "D",
           "pts": 0
         },
@@ -784,6 +843,7 @@
           "last": "SMITH",
           "number": "24",
           "pim": 6,
+          "player_id": 1952852,
           "position": "D",
           "pts": 0
         },
@@ -796,6 +856,7 @@
           "last": "LANGMAN",
           "number": "32",
           "pim": 2,
+          "player_id": 2148127,
           "position": "F",
           "pts": 0
         },
@@ -808,6 +869,7 @@
           "last": "GUERIN",
           "number": "11",
           "pim": 0,
+          "player_id": 2245894,
           "position": "F",
           "pts": 0
         }
@@ -839,6 +901,7 @@
           "last": "WINDER",
           "min": 443,
           "number": "20",
+          "player_id": 1949577,
           "so": 1,
           "sv_pct": ".925",
           "w": 3
@@ -853,6 +916,7 @@
           "last": "THOMAS",
           "min": 284,
           "number": "1",
+          "player_id": 2155530,
           "so": 1,
           "sv_pct": ".892",
           "w": 3
@@ -868,6 +932,7 @@
           "last": "HEALE",
           "number": "9",
           "pim": 8,
+          "player_id": 2041740,
           "position": "F",
           "pts": 15
         },
@@ -880,6 +945,7 @@
           "last": "GOODMAN",
           "number": "6",
           "pim": 6,
+          "player_id": 2170568,
           "position": "F",
           "pts": 8
         },
@@ -892,6 +958,7 @@
           "last": "VERNAL",
           "number": "5",
           "pim": 2,
+          "player_id": 2045126,
           "position": "F",
           "pts": 7
         },
@@ -904,6 +971,7 @@
           "last": "RYALL",
           "number": "25",
           "pim": 2,
+          "player_id": 2066403,
           "position": "D",
           "pts": 6
         },
@@ -916,6 +984,7 @@
           "last": "GOILE",
           "number": "24",
           "pim": 2,
+          "player_id": 2029765,
           "position": "D",
           "pts": 4
         },
@@ -928,6 +997,7 @@
           "last": "PEDROSA",
           "number": "14",
           "pim": 10,
+          "player_id": 2115289,
           "position": "F",
           "pts": 3
         },
@@ -940,6 +1010,7 @@
           "last": "LINTON",
           "number": "26",
           "pim": 0,
+          "player_id": 2012136,
           "position": "F",
           "pts": 3
         },
@@ -952,6 +1023,7 @@
           "last": "HOGLUND",
           "number": "16",
           "pim": 6,
+          "player_id": 1945492,
           "position": "F",
           "pts": 2
         },
@@ -964,6 +1036,7 @@
           "last": "LILLY",
           "number": "17",
           "pim": 0,
+          "player_id": 2069437,
           "position": "FD",
           "pts": 2
         },
@@ -976,6 +1049,7 @@
           "last": "KEENAN",
           "number": "22",
           "pim": 0,
+          "player_id": 2074860,
           "position": "D",
           "pts": 1
         },
@@ -988,6 +1062,7 @@
           "last": "HARRIS",
           "number": "13",
           "pim": 2,
+          "player_id": 2012965,
           "position": "F",
           "pts": 1
         },
@@ -1000,6 +1075,7 @@
           "last": "POWER",
           "number": "7",
           "pim": 0,
+          "player_id": 2041698,
           "position": "D",
           "pts": 1
         },
@@ -1012,6 +1088,7 @@
           "last": "CROSS",
           "number": "12",
           "pim": 4,
+          "player_id": 2077023,
           "position": "D",
           "pts": 1
         },
@@ -1024,6 +1101,7 @@
           "last": "VOCKINS",
           "number": "19",
           "pim": 0,
+          "player_id": 2456538,
           "position": "D",
           "pts": 1
         },
@@ -1036,6 +1114,7 @@
           "last": "HOLLYER",
           "number": "23",
           "pim": 11,
+          "player_id": 2214486,
           "position": "D",
           "pts": 0
         },
@@ -1048,6 +1127,7 @@
           "last": "HORTOP-BLAIR",
           "number": "27",
           "pim": 0,
+          "player_id": 2039923,
           "position": "F",
           "pts": 0
         },
@@ -1060,6 +1140,7 @@
           "last": "WALTON",
           "number": "18",
           "pim": 0,
+          "player_id": 2037375,
           "position": "D",
           "pts": 0
         },
@@ -1072,6 +1153,7 @@
           "last": "LEWIS",
           "number": "11",
           "pim": 2,
+          "player_id": 2349936,
           "position": "D",
           "pts": 0
         },
@@ -1084,6 +1166,7 @@
           "last": "WINDER",
           "number": "20",
           "pim": 0,
+          "player_id": 1949577,
           "position": "d",
           "pts": 0
         }
@@ -1115,6 +1198,7 @@
           "last": "WICHMAN",
           "min": 371,
           "number": "25",
+          "player_id": 2037466,
           "so": 0,
           "sv_pct": ".921",
           "w": 2
@@ -1129,6 +1213,7 @@
           "last": "PAULSE",
           "min": 298,
           "number": "30",
+          "player_id": 1936932,
           "so": 1,
           "sv_pct": ".909",
           "w": 1
@@ -1143,6 +1228,7 @@
           "last": "HOPA-THOMSON",
           "min": 60,
           "number": "35",
+          "player_id": 2247142,
           "so": 0,
           "sv_pct": ".788",
           "w": 0
@@ -1158,6 +1244,7 @@
           "last": "BURSTEIN",
           "number": "28",
           "pim": 8,
+          "player_id": 2376316,
           "position": "F",
           "pts": 14
         },
@@ -1170,6 +1257,7 @@
           "last": "MILLS",
           "number": "2",
           "pim": 12,
+          "player_id": 2082509,
           "position": "F",
           "pts": 7
         },
@@ -1182,6 +1270,7 @@
           "last": "HARRIS",
           "number": "8",
           "pim": 10,
+          "player_id": 1921930,
           "position": "D",
           "pts": 5
         },
@@ -1194,6 +1283,7 @@
           "last": "BENNETTS",
           "number": "36",
           "pim": 24,
+          "player_id": 2028096,
           "position": "F",
           "pts": 4
         },
@@ -1206,6 +1296,7 @@
           "last": "ORR",
           "number": "79",
           "pim": 6,
+          "player_id": 2437033,
           "position": "D",
           "pts": 4
         },
@@ -1218,6 +1309,7 @@
           "last": "WEEKS",
           "number": "6",
           "pim": 4,
+          "player_id": 2050664,
           "position": "F",
           "pts": 2
         },
@@ -1230,6 +1322,7 @@
           "last": "OUIMET",
           "number": "5",
           "pim": 6,
+          "player_id": 2055745,
           "position": "F",
           "pts": 2
         },
@@ -1242,6 +1335,7 @@
           "last": "STYLES",
           "number": "15",
           "pim": 12,
+          "player_id": 2079820,
           "position": "D",
           "pts": 2
         },
@@ -1254,6 +1348,7 @@
           "last": "LAWRENCE",
           "number": "17",
           "pim": 6,
+          "player_id": 2465580,
           "position": "D",
           "pts": 2
         },
@@ -1266,6 +1361,7 @@
           "last": "CLARKE",
           "number": "16",
           "pim": 0,
+          "player_id": 2050711,
           "position": "F",
           "pts": 1
         },
@@ -1278,6 +1374,7 @@
           "last": "SANGSTER",
           "number": "10",
           "pim": 4,
+          "player_id": 2436814,
           "position": "F",
           "pts": 1
         },
@@ -1290,6 +1387,7 @@
           "last": "THURSTON",
           "number": "88",
           "pim": 2,
+          "player_id": 2037279,
           "position": "D",
           "pts": 1
         },
@@ -1302,6 +1400,7 @@
           "last": "HELLMRICH",
           "number": "92",
           "pim": 6,
+          "player_id": 2101606,
           "position": "D",
           "pts": 1
         },
@@ -1314,6 +1413,7 @@
           "last": "ANDREWS",
           "number": "42",
           "pim": 0,
+          "player_id": 2026308,
           "position": "F",
           "pts": 0
         },
@@ -1326,6 +1426,7 @@
           "last": "DIXON",
           "number": "23",
           "pim": 0,
+          "player_id": 2279541,
           "position": "D",
           "pts": 0
         },
@@ -1338,6 +1439,7 @@
           "last": "POTTER",
           "number": "20",
           "pim": 2,
+          "player_id": 2410374,
           "position": "D",
           "pts": 0
         },
@@ -1350,6 +1452,7 @@
           "last": "LETOURNEAU",
           "number": "27",
           "pim": 0,
+          "player_id": 2471355,
           "position": "F",
           "pts": 0
         },
@@ -1362,6 +1465,7 @@
           "last": "RIENZO",
           "number": "9",
           "pim": 0,
+          "player_id": 2026235,
           "position": "F",
           "pts": 0
         },
@@ -1374,6 +1478,7 @@
           "last": "POWNALL",
           "number": "26",
           "pim": 0,
+          "player_id": 2364632,
           "position": "F",
           "pts": 0
         }
