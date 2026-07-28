@@ -127,9 +127,19 @@ def _probe_shells(start_gameid: int, probe_ahead: int,
     return shells
 
 
+# 2026-07-28: bumped from 12, ported from the NZIHL sibling repo. Gameids are
+# a platform-wide shared sequence (other clients'/leagues' games consume ids
+# too), so the gap between the last-played final and the next game can grow
+# past a small probe window during any gap in this league's own schedule --
+# confirmed live on NZIHL: the Aug 7-8 playoff semis sat at last_final+27..+30
+# because other leagues' bookings took the ids in between, and probe_ahead=12
+# silently resolved gameid=None for every one of those games. NZWIHL's own
+# Aug 1 semis happened to land within the old +12 window so this repo wasn't
+# yet visibly broken, but the same failure mode applies here -- 60 gives
+# headroom for a similar gap around the bronze/grand-final rounds.
 def resolve(games: list[Game], schedule_html: str, *,
             client_id: int = CLIENT_ID, league_id: int = LEAGUE_ID,
-            probe_ahead: int = 12, core_keys: set[tuple] | None = None,
+            probe_ahead: int = 60, core_keys: set[tuple] | None = None,
             today: _date | None = None, fetch_month=None) -> list[dict]:
     """Map each upcoming Game to its gameid (or None if it can't be resolved).
 
