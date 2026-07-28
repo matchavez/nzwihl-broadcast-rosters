@@ -49,9 +49,29 @@ class Game:
 
 
 def fetch_schedule_html(client_id: int = 7132, league_id: int = 35501) -> str:
+    """Merge the default page with explicit current+next-2-month pages.
+
+    2026-07-28 fix: printPage=1 with no monthID/yearID is scoped to roughly the
+    site's current server month and does NOT include games starting after
+    month-end -- confirmed missing the entire August playoff bracket (semis
+    Aug 1-2, bronze/final Aug 2) while scraped in late July, even though those
+    games were well within both the PDF and manifest lookahead windows.
+    Concatenating in the explicit-month page for this month and the next two
+    closes that gap without touching any window-day math. parse_schedule()
+    dedupes the resulting overlap.
+    """
     params = {"clientid": client_id, "leagueid": league_id, "schedType": "main", "printPage": 1}
     url = f"{SCHEDULE_URL}?{urlencode(params)}"
-    return fetch(url)
+    pages = [fetch(url)]
+    now = datetime.now(NZ_TZ)
+    for offset in (0, 1, 2):
+        m = now.month + offset
+        y = now.year
+        while m > 12:
+            m -= 12
+            y += 1
+        pages.append(fetch_schedule_html_for_month(client_id, league_id, month_id=m, year_id=y))
+    return "\n".join(pages)
 
 
 def fetch_schedule_html_for_month(client_id: int = 7132, league_id: int = 35501, *,
@@ -174,7 +194,18 @@ def parse_schedule(html: str) -> list[Game]:
             start_local = datetime(year, month, day, hour, minute, tzinfo=NZ_TZ)
             games.append(Game(start_local, away, home, venue, False))
 
-    return games
+    # Dedupe: fetch_schedule_html() now concatenates several overlapping page
+    # fetches (default + explicit current/next months), so the same game can
+    # appear more than once. Keep first occurrence, keyed on the fields that
+    # identify a single real-world game.
+    seen: set[tuple[int, int, datetime, bool]] = set()
+    deduped: list[Game] = []
+    for g in games:
+        key = (g.away.team_id, g.home.team_id, g.start_local, g.is_final)
+        if key not in seen:
+            seen.add(key)
+            deduped.append(g)
+    return deduped
 
 
 def upcoming_within(days: int, html: str | None = None) -> list[Game]:
