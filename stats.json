@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-26",
+  "generated_at": "2026-07-28",
   "league": "nzwihl",
   "teams": {
     "AST": {
@@ -1113,7 +1113,7 @@
           "gp": 10,
           "last": "HOLLYER",
           "number": "23",
-          "pim": 11,
+          "pim": 8,
           "player_id": 2214486,
           "position": "D",
           "pts": 0
