@@ -26,6 +26,32 @@
       "gameid": 2520024,
       "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520024",
       "in_core_window": true
+    },
+    {
+      "date": "2026-08-01",
+      "time": "11:15 AM",
+      "datetime": "2026-08-01T11:15:00+12:00",
+      "away": "Canterbury Inferno",
+      "away_code": "CIN",
+      "home": "Auckland Steel",
+      "home_code": "AST",
+      "venue": "Alpine Ice Centre",
+      "gameid": 2520032,
+      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520032",
+      "in_core_window": true
+    },
+    {
+      "date": "2026-08-01",
+      "time": "4:45 PM",
+      "datetime": "2026-08-01T16:45:00+12:00",
+      "away": "Wakatipu Wild",
+      "away_code": "WLD",
+      "home": "Dunedin Thunder Women",
+      "home_code": "DTW",
+      "venue": "Alpine Ice Centre",
+      "gameid": 2520033,
+      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520033",
+      "in_core_window": true
     }
   ]
 }
