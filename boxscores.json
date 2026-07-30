@@ -2,19 +2,6 @@
   "league": "NZWIHL",
   "games": [
     {
-      "date": "2026-07-26",
-      "time": "4:00 PM",
-      "datetime": "2026-07-26T16:00:00+12:00",
-      "away": "Auckland Steel",
-      "away_code": "AST",
-      "home": "Dunedin Thunder Women",
-      "home_code": "DTW",
-      "venue": "Dunedin Ice Stadium",
-      "gameid": 2520024,
-      "boxscore_url": "https://admin.esportsdesk.com/leagues/hockey_boxscores.cfm?clientid=7132&leagueid=35501&gameid=2520024",
-      "in_core_window": true
-    },
-    {
       "date": "2026-08-01",
       "time": "11:15 AM",
       "datetime": "2026-08-01T11:15:00+12:00",
