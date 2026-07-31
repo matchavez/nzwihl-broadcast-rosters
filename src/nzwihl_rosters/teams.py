@@ -16,7 +16,7 @@ class Team:
     accent_hex: str              # secondary colour (used for IM flag etc.)
     title_hex: str               # team-name text colour drawn on the band
     home_venue: str              # short venue label for the footer
-    short_code: str              # 3-letter code (AST/CIN/DTW/WLD)
+    short_code: str              # 3-letter code (AST/INF/DTW/WLD)
     logo_file: str = ""          # filename in assets/logos/ (defaults to short_code.png)
     text_hex: str = ""           # team colour used for TEXT on a white background
                                   # (jersey #, captain letter). Falls back to
@@ -54,7 +54,7 @@ TEAMS: dict[str, Team] = {
         accent_hex="#FF6A13",
         title_hex="#FFFFFF",
         home_venue="Alpine Ice Centre",
-        short_code="CIN",
+        short_code="INF",
     ),
     "DUNEDIN THUNDER WOMEN": Team(
         team_id=675638,

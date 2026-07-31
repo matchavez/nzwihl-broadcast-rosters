@@ -77,7 +77,7 @@ def test_goalie_dict_shape():
 
 
 def test_write_stats_json_shape(tmp_path):
-    fake_teams = {"CIN": {"team_id": 675637, "display_name": "Canterbury Inferno",
+    fake_teams = {"INF": {"team_id": 675637, "display_name": "Canterbury Inferno",
                            "skaters": [], "goalies": [], "coaches": []}}
     out = tmp_path / "stats.json"
     payload = stats_export.write_stats_json(out, league_key="nzwihl", teams_stats=fake_teams)
@@ -92,7 +92,7 @@ def test_scrape_all_teams_stats_skips_a_failing_team(monkeypatch):
     from nzwihl_rosters.teams import TEAMS
 
     def fake_scrape_team_stats(team, client_id, league_id, game_logs):
-        if team.short_code == "CIN":
+        if team.short_code == "INF":
             raise RuntimeError("simulated network failure")
         return {"team_id": team.team_id, "display_name": team.display_name,
                 "skaters": [], "goalies": [], "coaches": []}
@@ -101,7 +101,7 @@ def test_scrape_all_teams_stats_skips_a_failing_team(monkeypatch):
     monkeypatch.setattr(stats_export, "fetch_player_game_logs", lambda: {})
     monkeypatch.setattr(stats_export, "scrape_team_stats", fake_scrape_team_stats)
     out = stats_export.scrape_all_teams_stats()
-    assert "CIN" not in out
+    assert "INF" not in out
     assert len(out) == len(TEAMS) - 1
 
 
